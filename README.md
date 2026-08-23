@@ -1,2 +1,9 @@
-# Muebleria-Hermanos-Jota
-Trabajo Integrador - Curso Full Stack Developer MERN - ITBA
+# E-commerce Mueblería Hermanos Jota
+## Integrantes
+| Apellido y Nombre |
+|---|
+| Luciano Joaquin Maciel |
+| Oriana Sol Forciniti |
+| Zaiqui Marcial Facundo Emanuel |
+| Imanol Perez |
+| Algañaraz Narella |
