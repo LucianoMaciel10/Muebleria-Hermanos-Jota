@@ -1,0 +1,513 @@
+/* =========================================================
+    HERMANOS JOTA — Hoja de estilos global
+    Basado en el Manual de Marca (paleta, tipografía y voz)
+    Mobile first: los estilos base son para mobile,
+    las media queries agregan/ajustan para pantallas mayores.
+   ========================================================= */
+
+/* ---------- 1. VARIABLES DE MARCA ---------- */
+:root {
+  /* Paleta oficial (Manual de Marca) */
+  --color-siena: #A0522D;      /* Color principal, títulos */
+  --color-verde-salvia: #87A96B; /* Acento secundario, sustentabilidad */
+  --color-alabastro: #F5E6D3;  /* Fondos principales, fotografía */
+  --color-oro: #D4A437;        /* Detalles premium, acentos */
+  --color-rosa: #C47A6D;       /* Acentos suaves */
+
+  /* Neutros derivados (no definidos en el manual, usados solo
+     para texto y contraste, manteniendo la calidez de la marca) */
+  --color-text: #3A2A1F;
+  --color-text-soft: #6B5A4E;
+  --color-dark: #241610;        /* Footer / fondos oscuros */
+  --color-white: #FFFFFF;
+
+  /* Tipografía (Manual de Marca) */
+  --font-heading: 'Playfair Display', Georgia, serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Espaciado */
+  --container-max: 1200px;
+  --gap: 1rem;
+  --header-height: 88px;
+
+  /* Sombra / bordes */
+  --radius: 10px;
+  --shadow: 0 8px 24px rgba(36, 22, 16, 0.08);
+  --transition: 200ms ease;
+}
+
+/* ---------- 2. RESET BÁSICO ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  background-color: var(--color-white);
+}
+img { max-width: 100%; display: block; }
+ul { list-style: none; margin: 0; padding: 0; }
+a { color: inherit; text-decoration: none; }
+h1, h2, h3 { font-family: var(--font-heading); margin: 0; color: var(--color-siena); }
+p { margin: 0; }
+button { font-family: inherit; cursor: pointer; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; scroll-behavior: auto !important; }
+}
+
+/* ---------- 3. UTILIDADES ---------- */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+.eyebrow {
+  font-family: var(--font-body);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.8rem;
+  color: var(--color-verde-salvia);
+  margin-bottom: 0.5rem;
+}
+
+.section-title {
+  font-size: clamp(1.5rem, 4vw, 2.1rem);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  line-height: 1.25;
+  margin-bottom: 1.5rem;
+}
+
+.btn {
+  width: 100%;
+  text-align: center;
+  display: inline-block;
+  font-family: var(--font-body);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.85rem;
+  padding: 0.9rem 1.75rem;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  transition: background-color var(--transition), color var(--transition), transform var(--transition);
+}
+.btn--primary {
+  background-color: var(--color-siena);
+  color: var(--color-white);
+}
+.btn--primary:hover,
+.btn--primary:focus-visible {
+  background-color: #8a4425;
+}
+
+/* ---------- 4. HEADER / NAV ---------- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: var(--color-white);
+  border-bottom: 1px solid rgba(160, 82, 45, 0.12);
+}
+
+.header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 1.1rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--color-siena);
+}
+.logo__img { 
+  width: 52px; 
+  height: auto;
+  border-radius: 50%;
+  border: 2px solid var(--color-siena);
+  background-color: #FDF6F0;
+}
+
+/* Botón hamburguesa (mobile) */
+.nav-toggle {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 32px;
+  height: 32px;
+  padding: 6px;
+  background: none;
+  border: none;
+  order: 3;
+}
+.nav-toggle__bar {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background-color: var(--color-siena);
+  border-radius: 2px;
+  transition: transform var(--transition), opacity var(--transition);
+}
+.nav-toggle.is-active .nav-toggle__bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-toggle.is-active .nav-toggle__bar:nth-child(2) { opacity: 0; }
+.nav-toggle.is-active .nav-toggle__bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* Menú de navegación (mobile: oculto por defecto, se despliega) */
+.main-nav {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: var(--color-white);
+  border-bottom: 1px solid rgba(160, 82, 45, 0.12);
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height var(--transition);
+  order: 4;
+  width: 100%;
+}
+.main-nav.is-open { max-height: 300px; }
+.main-nav__list { display: flex; flex-direction: column; padding: 0.5rem 1.25rem 1rem; }
+.main-nav__list li a {
+  display: block;
+  padding: 0.75rem 0;
+  font-weight: 500;
+  color: var(--color-text);
+  border-bottom: 1px solid rgba(160, 82, 45, 0.08);
+}
+.main-nav__list li a[aria-current="page"] { color: var(--color-siena); }
+.main-nav__list li a:hover,
+.main-nav__list li a:focus-visible { color: var(--color-siena); }
+
+.cart-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  color: var(--color-siena);
+  order: 2;
+}
+.cart-link__icon { width: 24px; height: 24px; }
+.cart-link__count {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background-color: var(--color-oro);
+  color: var(--color-dark);
+  font-size: 0.65rem;
+  font-weight: 700;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-inline: 2px;
+  padding: 3px 0 0 1px;
+}
+
+/* ---------- 5. HERO ---------- */
+.hero {
+  background: linear-gradient(to top, #f5e5ce 0%, var(--color-alabastro) 45%, var(--color-white) 100%);
+  min-height: calc(100svh - var(--header-height)); 
+  display: flex;
+  align-items: center;
+}
+.hero__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding-block: 3rem;
+  width: 100%;
+}
+.hero__title {
+  font-size: clamp(2rem, 5vw, 2.75rem); 
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  line-height: 1.15;
+  margin-bottom: 1rem;
+}
+.hero__text {
+  font-size: 1rem;
+  color: var(--color-text-soft);
+  max-width: 42ch;
+  margin-bottom: 1.75rem;
+}
+.hero__media {
+  overflow: hidden;
+  border-radius: var(--radius);
+  height: clamp(200px, 42vw, 340px);
+}
+.hero__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 68%;
+  border-radius: var(--radius);
+}
+
+/* ---------- 6. ESENCIA DE MARCA ---------- */
+.essence { padding-block: 3.5rem; text-align: center; }
+.essence__text {
+  max-width: 60ch;
+  margin: 0 auto 2.5rem;
+  color: var(--color-text-soft);
+  font-size: 1rem;
+}
+.essence__features {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+.feature-item__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: rgba(135, 169, 107, 0.12);
+  color: var(--color-verde-salvia);
+  margin-bottom: 0.75rem;
+}
+.feature-item__icon svg { width: 24px; height: 24px; }
+.feature-item h3 {
+  font-size: 1rem;
+  text-transform: none;
+  color: var(--color-text);
+  margin-bottom: 0.25rem;
+}
+.feature-item p {
+  font-size: 0.85rem;
+  color: var(--color-text-soft);
+}
+
+/* ---------- 7. COLECCIONES ---------- */
+.collections { padding-block: 3rem; background-color: var(--color-alabastro); }
+.collections .section-title { text-align: center; }
+.collections__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+.collection-card {
+  position: relative;
+  display: block;
+  border-radius: var(--radius);
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  background-color: var(--color-white);
+  box-shadow: var(--shadow);
+}
+.collection-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgba(36, 22, 16, 0.4);
+  z-index: 1;
+  transition: background-color var(--transition);
+}
+.collection-card:hover::before,
+.collection-card:focus-visible::before {
+  background-color: rgba(36, 22, 16, 0.086); 
+}
+.collection-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 400ms ease;
+}
+.collection-card:hover img,
+.collection-card:focus-visible img {
+  transform: scale(1.08);
+}
+.collection-card__label {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  padding: 0.75rem;
+  color: var(--color-white);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.8rem;
+  z-index: 2;
+}
+
+/* ---------- 8. PRODUCTOS DESTACADOS ---------- */
+.featured { padding-block: 3rem; }
+.featured .section-title { text-align: center; }
+.featured__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+.product-card {
+  border: 1px solid rgba(160, 82, 45, 0.12);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background-color: var(--color-white);
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+.product-card:hover,
+.product-card:focus-within { box-shadow: var(--shadow); transform: translateY(-4px); }
+.product-card__link { display: block; }
+.product-card__media { background-color: var(--color-alabastro); aspect-ratio: 1 / 1; }
+.product-card__media img { width: 100%; height: 100%; object-fit: contain; padding: 1rem; }
+.product-card__body { padding: 1rem 1.25rem 1.5rem; }
+.product-card__title {
+  font-size: 1.05rem;
+  text-transform: none;
+  margin-bottom: 0.4rem;
+}
+.product-card__desc {
+  font-size: 0.85rem;
+  color: var(--color-text-soft);
+  margin-bottom: 0.75rem;
+}
+.product-card__cta {
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-rosa);
+}
+
+/* ---------- 9. COMPROMISO CON EL FUTURO ---------- */
+.commitment { background-color: var(--color-verde-salvia); color: var(--color-white); padding-block: 2rem; }
+.commitment__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.75rem;
+}
+.commitment__icon { width: 32px; height: 32px; flex-shrink: 0; }
+.commitment__title {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.25rem;
+}
+.commitment__text { font-size: 0.85rem; opacity: 0.9; }
+
+/* ---------- 10. FOOTER ---------- */
+.site-footer { background-color: var(--color-dark); color: var(--color-alabastro); }
+.footer__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  padding-block: 3rem;
+}
+.footer__brand { display: flex; flex-direction: column; gap: 0.75rem; }
+.footer__brand p { font-family: var(--font-heading); font-style: italic; opacity: 0.75; }
+.footer__col h3 {
+  font-family: var(--font-body);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.85rem;
+  color: var(--color-oro);
+  margin-bottom: 0.9rem;
+}
+.footer__col ul { display: flex; flex-direction: column; gap: 0.6rem; }
+.footer__col a,
+.footer__col address { color: rgba(245, 230, 211, 0.8); font-size: 0.9rem; font-style: normal; line-height: 1.7; }
+.footer__col a:hover,
+.footer__col a:focus-visible { color: var(--color-oro); }
+.footer__bottom {
+  border-top: 1px solid rgba(245, 230, 211, 0.12);
+  padding-block: 1.25rem;
+}
+.footer__bottom p { font-size: 0.75rem; text-align: center; opacity: 0.6; }
+
+/* =========================================================
+    MEDIA QUERIES — Mobile first (449px / 600px / 900px / 1200px)
+   ========================================================= */
+
+
+@media (min-width: 449px) {
+  .btn {
+    width: max-content;
+  }
+}
+
+/* Tablets */
+@media (min-width: 600px) {
+  .essence__features { grid-template-columns: repeat(3, 1fr); }
+  .collections__grid { grid-template-columns: repeat(2, 1fr); }
+  .featured__grid { grid-template-columns: repeat(2, 1fr); }
+  .footer__grid { grid-template-columns: repeat(2, 1fr); }
+  .commitment__inner { flex-direction: row; text-align: left; justify-content: center; }
+  .logo { font-size: 1.4rem; }
+}
+
+/* Escritorio pequeño */
+@media (min-width: 900px) {
+  .nav-toggle { display: none; }
+
+  .main-nav {
+    position: static;
+    max-height: none;
+    overflow: visible;
+    background: none;
+    border: none;
+    width: auto;
+    order: 2;
+  }
+  .main-nav__list {
+    flex-direction: row;
+    padding: 0;
+    gap: 2rem;
+  }
+  .main-nav__list li a { border-bottom: none; padding: 0.4rem 0; }
+
+  .header__inner { justify-content: space-between; }
+  .cart-link { order: 3; }
+
+  .hero__inner {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: clamp(2rem, 6vw, 5rem);
+    padding-block: 0; 
+  }
+  .hero__content {
+    flex: 1 1 45%;
+    max-width: 560px;
+  }
+  .hero__media {
+    flex: 1 1 45%;
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    aspect-ratio: 1 / 1;
+  }
+
+  .collections__grid { grid-template-columns: repeat(4, 1fr); }
+  .featured__grid { grid-template-columns: repeat(4, 1fr); }
+  .footer__grid { grid-template-columns: 1.5fr repeat(3, 1fr); }
+  .logo { font-size: 1.7rem; }
+}
+
+/* Escritorio grande */
+@media (min-width: 1200px) {
+  .hero__title { font-size: 3.5rem; }
+  .essence { padding-block: 5rem; }
+  .collections, .featured { padding-block: 4.5rem; }
+  .hero__inner { gap: clamp(5rem, 10vw, 9rem); }
+}
