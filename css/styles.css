@@ -435,6 +435,43 @@ button { font-family: inherit; cursor: pointer; }
 }
 .footer__bottom p { font-size: 0.75rem; text-align: center; opacity: 0.6; }
 
+/* ---------- 9. CATÁLOGO DE PRODUCTOS ---------- */
+.catalog {
+  padding-block: 3rem;
+  background-color: var(--color-white);
+}
+.catalog__header {
+  margin-bottom: 1.5rem;
+}
+.catalog__header .section-title {
+  margin-bottom: 0;
+  text-align: left;
+  letter-spacing: normal;
+}
+.catalog__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+.catalog .product-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 100%;
+}
+.catalog .product-card__link {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+.catalog .product-card__body {
+  flex: 1;
+}
+.catalog .product-card__link:focus-visible {
+  outline: 3px solid var(--color-oro);
+  outline-offset: -3px;
+}
+
 /* =========================================================
     MEDIA QUERIES — Mobile first (449px / 600px / 900px / 1200px)
    ========================================================= */
@@ -451,6 +488,7 @@ button { font-family: inherit; cursor: pointer; }
   .essence__features { grid-template-columns: repeat(3, 1fr); }
   .collections__grid { grid-template-columns: repeat(2, 1fr); }
   .featured__grid { grid-template-columns: repeat(2, 1fr); }
+  .catalog__grid { grid-template-columns: repeat(2, 1fr); }
   .footer__grid { grid-template-columns: repeat(2, 1fr); }
   .commitment__inner { flex-direction: row; text-align: left; justify-content: center; }
   .logo { font-size: 1.4rem; }
@@ -500,6 +538,7 @@ button { font-family: inherit; cursor: pointer; }
 
   .collections__grid { grid-template-columns: repeat(4, 1fr); }
   .featured__grid { grid-template-columns: repeat(4, 1fr); }
+  .catalog__grid { grid-template-columns: repeat(4, 1fr); }
   .footer__grid { grid-template-columns: 1.5fr repeat(3, 1fr); }
   .logo { font-size: 1.7rem; }
 }

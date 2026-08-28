@@ -74,13 +74,28 @@
             <circle cx="9.5" cy="19.5" r="1.4" fill="currentColor" />
             <circle cx="17.5" cy="19.5" r="1.4" fill="currentColor" />
           </svg>
-          <span class="cart-link__count" id="cart-count" hidden>10</span>
+          <span class="cart-link__count" id="cart-count" hidden>0</span>
         </a>
       </div>
     </header>
 
+    <!-- ===================== CATÁLOGO ===================== -->
     <main id="main">
-      <!-- TODO: Catálogo de Productos - Integrante 2 -->
+      <section class="catalog" aria-labelledby="catalog-title">
+        <div class="container">
+          <header class="catalog__header">
+            <h1 id="catalog-title" class="section-title">Productos</h1>
+          </header>
+
+          <ul
+            class="catalog__grid"
+            id="products-grid"
+            aria-label="Productos disponibles"
+          >
+            <!-- Las tarjetas .product-card se generan dinámicamente desde js/productos.js -->
+          </ul>
+        </div>
+      </section>
     </main>
 
     <!-- ===================== FOOTER ===================== -->
