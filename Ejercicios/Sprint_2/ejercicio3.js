@@ -1,27 +1,40 @@
-const productos = [
-    { nombre: "Remera", precio: 10000 },
-    { nombre: "Pantalón", precio: 20000 },
-    { nombre: "Zapatillas", precio: 30000 }
-];   //aca deberia sacarlos de productos.js despuess
+/*
+Ejercicio 3: Simulador de Carrito de Compras
+Tiempo de resolución estimado: 25 minutos
+Objetivo: Practicar el uso del bucle while y la función confirm para crear un flujo interactivo.
+Tareas:
+En un nuevo archivo ejercicio3.js, inicializá una variable totalCompra en 0.
+Iniciá un bucle while que se ejecute mientras el usuario quiera seguir comprando.
+Dentro del bucle, usa confirm('¿Desea agregar un producto al carrito?'). La respuesta (true o false) determinará si el bucle continúa.
+Si el usuario hace clic en "Aceptar" (true):
+• Usá prompt('Ingrese el valor del producto:').
+• Importante: Convertí el valor ingresado (que es un string) a un número usando parseFloat().
+• Verificá si el valor ingresado es un número válido. Si lo es, súmalo a totalCompra.
+Cuando el usuario haga clic en "Cancelar" (false), el bucle terminará.
+Fuera del bucle, muestra un alert() con el total de la compra. Por ejemplo: El total de su compra es: $[valor_total].
+*/
 
-const carrito = [];
 
-let total = 0;
 
-function agregarAlCarrito(numero) {
-    const productoSeleccionado = productos[numero - 1];
+let totalCompra = 0; //consigna
+let seguirComprando = true;
 
-    carrito.push(productoSeleccionado);
+while (seguirComprando) { //condicion del while por consigna
 
-    total = total + productoSeleccionado.precio;
+    seguirComprando = confirm("¿Desea agregar un producto al carrito?"); //consigna.
 
-    console.log("Producto agregado:", productoSeleccionado.nombre);
-    console.log("Carrito:", carrito);
-    console.log("Total: $" + total);
+    if (seguirComprando) {
+
+        let valorProducto = prompt("Ingrese el valor del producto:");// consigna
+        valorProducto = parseFloat(valorProducto); //consigna
+
+        //tambien deberiamos validar q no pueda ser numero negativo pero no lo dice la consigna
+        if (!isNaN(valorProducto)) { 
+            totalCompra = totalCompra + valorProducto; //consigna
+        } else {
+            alert("El valor ingresado no es valido.");
+        }
+    }
 }
 
-//esto deberia reemplazarse con botones en la pag real
-
-boton.addEventListener("click", function() {
-    agregarAlCarrito(idProducto);
-});
+alert("El total de su compra es: $" + totalCompra);
