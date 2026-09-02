@@ -435,7 +435,7 @@ button { font-family: inherit; cursor: pointer; }
 }
 .footer__bottom p { font-size: 0.75rem; text-align: center; opacity: 0.6; }
 
-/* ---------- 9. CATÁLOGO DE PRODUCTOS ---------- */
+/* ---------- 11. CATÁLOGO DE PRODUCTOS ---------- */
 .catalog {
   padding-block: 3rem;
   background-color: var(--color-white);
@@ -464,8 +464,80 @@ button { font-family: inherit; cursor: pointer; }
   flex: 1;
   flex-direction: column;
 }
+.catalog .product-card__media {
+  position: relative;
+  overflow: hidden;
+}
+.catalog .product-card__badge {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  background-color: rgba(52, 38, 30, 0.86);
+  color: var(--color-white);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
 .catalog .product-card__body {
+  display: flex;
+  flex-direction: column;
   flex: 1;
+  min-height: 160px;
+}
+.catalog .product-card__desc {
+  flex: 1;
+  margin-bottom: 0;
+}
+.catalog .product-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 0.65rem;
+}
+.catalog .product-card__price {
+  margin-top: 0;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--color-rosa);
+  letter-spacing: 0.02em;
+}
+.catalog .product-card__btn {
+  appearance: none;
+  border: 0;
+  border-radius: 4px;
+  background-color: var(--color-siena);
+  color: var(--color-white);
+  font-size: 0.59rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.52rem 0.6rem;
+  min-width: 106px;
+  line-height: 1.2;
+  white-space: normal;
+  text-align: center;
+  transition: background-color var(--transition), transform var(--transition);
+}
+.catalog .product-card__btn:disabled,
+.catalog .product-card__btn.is-disabled {
+  background-color: #b8b0a8;
+  color: rgba(255, 255, 255, 0.9);
+  cursor: not-allowed;
+  opacity: 0.9;
+  transform: none;
+}
+.catalog .product-card__btn:hover:not(:disabled),
+.catalog .product-card__btn:focus-visible:not(:disabled) {
+  background-color: #8a4425;
+  transform: translateY(-1px);
 }
 .catalog .product-card__link:focus-visible {
   outline: 3px solid var(--color-oro);
