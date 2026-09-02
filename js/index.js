@@ -10,7 +10,11 @@
 document.addEventListener("DOMContentLoaded", () => {
   initMobileNav();
   renderFeaturedProducts();
-  updateCartCount();
+  if (window.hjCart && typeof window.hjCart.updateBadge === "function") {
+    window.hjCart.updateBadge();
+  } else {
+    updateCartCount();
+  }
 });
 
 /* ---------- Navegación mobile (hamburguesa) ---------- */
@@ -95,20 +99,24 @@ function renderFeaturedProducts() {
     .join("");
 }
 
-/* ---------- Contador del carrito (placeholder) ---------- */
-/*  La Parte 4 (carrito.js) es responsable de escribir en
-    localStorage bajo la clave 'hj-carrito' como un array de
-    objetos { id, cantidad, ... }. Acá solo lo leemos. */
+/* ---------- Contador del carrito ---------- */
+/* El carrito guarda cada producto completo como un array de objetos 
+  con sus datos básicos y la cantidad desde productos.js (acá solo lo 
+  leemos). LA PARTE 4 es responsable de usar el array bajo la clave 
+  "hj-carrito" para mostrar productos agregados, calcular totales, 
+  eliminar productos, etc. */
 function updateCartCount() {
   const badge = document.getElementById("cart-count");
   if (!badge) return;
 
   try {
     const carrito = JSON.parse(localStorage.getItem("hj-carrito")) || [];
-    const total = carrito.reduce((acc, item) => acc + (item.cantidad || 1), 0);
+    const total = carrito.reduce((acc, item) => acc + (Number(item.cantidad) || 0), 0);
     badge.textContent = total;
     badge.hidden = total === 0;
   } catch (error) {
     badge.hidden = true;
   }
 }
+
+window.updateCartCount = updateCartCount;
