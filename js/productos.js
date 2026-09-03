@@ -93,7 +93,7 @@ const productos = [
 	{
 		id: "silla-trabajo-belgrano",
 		nombre: "Silla de Trabajo Belgrano",
-		categoria: "Escritorios",
+		categoria: "Asientos",
 		imagen: "assets/images/silla-trabajo-belgrano.png",
 		descripcion: "Silla de trabajo de madera y tapizado.",
 		alt: "Silla de trabajo Belgrano de madera con asiento tapizado",
@@ -119,11 +119,36 @@ CARGA Y RENDERIZADO DEL CATÁLOGO DE PRODUCTOS
 */
 function cargarCatalogo() {
 	const productsGrid = document.querySelector("#products-grid");
+	const categoryFilter = document.querySelector("#category-filter");
 	if (!productsGrid) return;
 
 	productsGrid.innerHTML = "";
+	const categoriaSeleccionada = new URLSearchParams(window.location.search)
+		.get("categoria")
+		?.toLowerCase();
+	if (categoryFilter) {
+		categoryFilter.value = categoriaSeleccionada || "";
+		categoryFilter.onchange = () => {
+			const parametros = new URLSearchParams(window.location.search);
+			if (categoryFilter.value) {
+				parametros.set("categoria", categoryFilter.value);
+			} else {
+				parametros.delete("categoria");
+			}
+			const nuevaUrl = parametros.toString()
+				? `${window.location.pathname}?${parametros}`
+				: window.location.pathname;
+			window.history.pushState({}, "", nuevaUrl);
+			cargarCatalogo();
+		};
+	}
+	const productosFiltrados = categoriaSeleccionada
+		? productos.filter(
+				(producto) => producto.categoria.toLowerCase() === categoriaSeleccionada,
+			)
+		: productos;
 
-	productos.forEach((producto) => {
+	productosFiltrados.forEach((producto) => {
 		const item = document.createElement("li");
 		const tarjeta = document.createElement("article");
 		tarjeta.className = "product-card";
@@ -136,22 +161,26 @@ function cargarCatalogo() {
 		const sinStock = !producto.stock;
 
 		tarjeta.innerHTML = `
-			<a href="producto.html?id=${producto.id}" class="product-card__link" aria-label="Ver detalle de ${producto.nombre}">
-				<div class="product-card__media">
+			<div class="product-card__media">
+				<a href="producto.html?id=${producto.id}" class="product-card__link" aria-label="Ver detalle de ${producto.nombre}">
 					${sinStock ? '<span class="product-card__badge">Sin stock</span>' : ""}
 					<img src="${producto.imagen}" alt="${producto.alt}" loading="lazy">
+				</a>
+			</div>
+			<div class="product-card__body">
+				<h2 class="product-card__title">
+					<a href="producto.html?id=${producto.id}" class="product-card__link">
+						${producto.nombre}
+					</a>
+				</h2>
+				<p class="product-card__desc">${producto.descripcion}</p>
+				<div class="product-card__footer">
+					<p class="product-card__price">${precio}</p>
+					<button type="button" class="product-card__btn" data-product-id="${producto.id}" aria-label="Agregar ${producto.nombre} al carrito" ${sinStock ? 'disabled aria-disabled="true" title="Sin stock"' : ""}>
+						Agregar al carrito
+					</button>
 				</div>
-				<div class="product-card__body">
-					<h2 class="product-card__title">${producto.nombre}</h2>
-					<p class="product-card__desc">${producto.descripcion}</p>
-					<div class="product-card__footer">
-						<p class="product-card__price">${precio}</p>
-						<button type="button" class="product-card__btn" data-product-id="${producto.id}" aria-label="Agregar ${producto.nombre} al carrito" ${sinStock ? 'disabled aria-disabled="true" title="Sin stock"' : ""}>
-							Agregar al carrito
-						</button>
-					</div>
-				</div>
-			</a>
+			</div>
 		`;
 
 		item.appendChild(tarjeta);
@@ -162,9 +191,10 @@ function cargarCatalogo() {
 		const button = event.target.closest("[data-product-id]");
 		if (!button || button.disabled) return;
 
-		event.preventDefault();
-		event.stopPropagation();
-		const producto = productos.find((item) => item.id === button.dataset.productId);
+		const producto = productos.find(
+			(item) => item.id === button.dataset.productId,
+		);
+		
 		if (producto) window.hjCart.add(producto);
 	});
 
