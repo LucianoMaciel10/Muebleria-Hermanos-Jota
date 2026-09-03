@@ -7,47 +7,46 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-   
-    <header class="site-header">
-        <div class="container header__inner">
 
-            <a href="index.html" class="logo" aria-label="Hermanos Jota, ir al inicio">
-                <img src="assets/images/logo.svg" alt="" class="logo__img">
-                <span class="logo__text">Hermanos Jota</span>
-            </a>
+   <header class="site-header">
+    <div class="container header__inner">
 
-            <button type="button" class="nav-toggle" id="nav-toggle" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="nav-menu">
-                <span class="nav-toggle__bar"></span>
-                <span class="nav-toggle__bar"></span>
-                <span class="nav-toggle__bar"></span>
-            </button>
+      <a href="index.html" class="logo" aria-label="Hermanos Jota, ir al inicio">
+        <img src="assets/images/logo.svg" alt="" class="logo__img">
+        <span class="logo__text">Hermanos Jota</span>
+      </a>
 
-            <nav class="main-nav" id="nav-menu" aria-label="Navegación principal">
-                <ul class="main-nav__list">
-                    <li><a href="index.html">Inicio</a></li>
-                    <li><a href="productos.html">Productos</a></li>
-                    <li><a href="contacto.html">Contacto</a></li>
-                </ul>
-            </nav>
+      <button type="button" class="nav-toggle" id="nav-toggle" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="nav-menu">
+        <span class="nav-toggle__bar"></span>
+        <span class="nav-toggle__bar"></span>
+        <span class="nav-toggle__bar"></span>
+      </button>
 
-            <a href="carrito.html" class="cart-link" aria-label="Ver carrito de compras" aria-current="page">
-                <svg class="cart-link__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                    <path d="M6 6h15l-1.5 9h-12L6 3H3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                    <circle cx="9.5" cy="19.5" r="1.4" fill="currentColor"/>
-                    <circle cx="17.5" cy="19.5" r="1.4" fill="currentColor"/>
-                </svg>
-                <span class="cart-link__count" id="cart-count" hidden>0</span>
-            </a>
+      <nav class="main-nav" id="nav-menu" aria-label="Navegación principal">
+        <ul class="main-nav__list">
+          <li><a href="index.html" aria-current="page">Inicio</a></li>
+          <li><a href="productos.html">Productos</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+      </nav>
 
-        </div>
-    </header>
+      <a href="carrito.html" class="cart-link" aria-label="Ver carrito de compras">
+        <svg class="cart-link__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M6 6h15l-1.5 9h-12L6 3H3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="9.5" cy="19.5" r="1.4" fill="currentColor"/>
+          <circle cx="17.5" cy="19.5" r="1.4" fill="currentColor"/>
+        </svg>
+        <span class="cart-link__count" id="cart-count" hidden>10</span>
+      </a>
+
+    </div>
+  </header>
 
     <!-- ===================== CONTENIDO PRINCIPAL ===================== -->
     <main class="pagina-carrito">
         <div class="contenedor-carrito">
             <h1 class="titulo-carrito">Tu Carrito de Compras</h1>
 
-           
             <div id="carrito-vacio" class="mensaje-carrito-vacio" hidden>
                 <h2>Tu carrito está vacío actualmente.</h2>
                 <a href="productos.html" class="btn-catalogo">Ver Catálogo de Productos</a>
@@ -60,7 +59,7 @@
 
                 <aside class="resumen-pedido">
                     <h2>Resumen del Pedido</h2>
-                    
+
                     <div class="fila-resumen">
                         <span>Subtotal</span>
                         <span id="subtotal-carrito">$0</span>
@@ -80,14 +79,24 @@
                         <button id="btn-comprar" type="button" class="btn-comprar">Finalizar Compra</button>
                         <button id="btn-vaciar" type="button" class="btn-vaciar">Vaciar Carrito</button>
                     </div>
-                    <!-- Ventana Emergente de Confirmación -->
-
                 </aside>
             </div>
         </div>
     </main>
 
-    <!-- Scripts del sitio -->
+    <!-- Ventana emergente de confirmación o rechazo -->
+    <div class="ventana-emergente-overlay" id="ventana-emergente-overlay" hidden>
+        <div class="ventana-emergente-caja" role="alertdialog" aria-modal="true" aria-labelledby="ventana-emergente-titulo" aria-describedby="ventana-emergente-mensaje">
+            <h2 class="ventana-emergente-titulo" id="ventana-emergente-titulo">Mueblería Hermanos Jota</h2>
+            <p class="ventana-emergente-mensaje" id="ventana-emergente-mensaje"></p>
+            <div class="ventana-emergente-acciones" id="ventana-emergente-acciones">
+                <button type="button" class="btn-ventana-emergente btn-ventana-emergente--cancelar" id="ventana-emergente-cancelar">Cancelar</button>
+                <button type="button" class="btn-ventana-emergente btn-ventana-emergente--aceptar" id="ventana-emergente-aceptar">Aceptar</button>
+            </div>
+        </div>
+    </div>
+
+   
     <script src="js/productos.js"></script>
     <script src="js/carrito.js"></script>
 </body>

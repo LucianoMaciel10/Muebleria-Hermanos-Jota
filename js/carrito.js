@@ -9,6 +9,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const botonVaciar = document.getElementById("btn-vaciar");
     const botonComprar = document.getElementById("btn-comprar");
 
+     const ventanaEmergenteOverlay = document.getElementById("ventana-emergente-overlay");
+    const ventanaEmergenteMensaje = document.getElementById("ventana-emergente-mensaje");
+    const ventanaEmergenteAceptar = document.getElementById("ventana-emergente-aceptar");
+    const ventanaEmergenteCancelar = document.getElementById("ventana-emergente-cancelar");
+
     // Formateador de moneda en pesos argentinos
     const formatearMoneda = (monto) => {
         return new Intl.NumberFormat("es-AR", {
@@ -25,6 +30,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (carrito.length === 0) {
             carritoVacio.hidden = false;
             contenidoCarrito.hidden = true;
+            // funcion limpiar el contenido del carrito para que no quede nada en el DOM
+            listaElementosCarrito.innerHTML = ""; 
             window.hjCart.updateBadge();
             return;
         }
@@ -106,24 +113,50 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+
+    // funcion de ventana emergente para confirmar o vaciar el carrito de compra
+function mostrarVentanaEmergente({ mensaje, mostrarCancelar = false }) {
+        return new Promise((resolve) => {
+            ventanaEmergenteMensaje.textContent = mensaje;
+            ventanaEmergenteCancelar.hidden = !mostrarCancelar;
+            ventanaEmergenteOverlay.hidden = false;
+ 
+            const cerrar = (resultado) => {
+                ventanaEmergenteOverlay.hidden = true;
+                ventanaEmergenteAceptar.removeEventListener("click", onAceptar);
+                ventanaEmergenteCancelar.removeEventListener("click", onCancelar);
+                resolve(resultado);
+            };
+            const onAceptar = () => cerrar(true);
+            const onCancelar = () => cerrar(false);
+ 
+            ventanaEmergenteAceptar.addEventListener("click", onAceptar);
+            ventanaEmergenteCancelar.addEventListener("click", onCancelar);
+        });
+    }
     // Vaciar Carrito
-    botonVaciar.addEventListener("click", () => {
-        if (confirm("¿Estás seguro de que deseas vaciar el carrito?")) {
+    botonVaciar.addEventListener("click",async () => {
+
+        const confirmado = await mostrarVentanaEmergente({
+            mensaje: "¿Estás seguro de que deseas vaciar el carrito?",
+            mostrarCancelar: true
+        });
+        if (confirmado) {
             window.hjCart.set([]);
             renderizarCarrito();
         }
     });
 
-    // Simulación de Finalizar Compra
-    botonComprar.addEventListener("click", () => {
-        alert("¡Gracias por tu compra en Mueblería Hermanos Jota! Procesando el pedido...");
+    // Finalizar Compra
+    botonComprar.addEventListener("click", async () => {
+        await mostrarVentanaEmergente({
+            mensaje: "¡Gracias por tu compra en Mueblería Hermanos Jota! Procesando el pedido..."
+        });
         window.hjCart.set([]);
         renderizarCarrito();
     });
-
+ 
     renderizarCarrito();
 });
-
-
 
 
