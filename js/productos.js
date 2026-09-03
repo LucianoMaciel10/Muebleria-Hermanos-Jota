@@ -187,7 +187,7 @@ function cargarCatalogo() {
 		productsGrid.appendChild(item);
 	});
 
-	productsGrid.addEventListener("click", (event) => {
+	productsGrid.onclick = (event) => {
 		const button = event.target.closest("[data-product-id]");
 		if (!button || button.disabled) return;
 
@@ -196,7 +196,7 @@ function cargarCatalogo() {
 		);
 		
 		if (producto) window.hjCart.add(producto);
-	});
+	};
 
 };
 
