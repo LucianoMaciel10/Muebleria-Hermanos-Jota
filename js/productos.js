@@ -8,7 +8,7 @@ const productos = [
 		descripcion: "Sofá amplio tapizado en lino claro.",
 		alt: "Sofá Patagonia tapizado en lino claro con patas cónicas de madera",
 		precio: 1950000,
-		stock: 6,
+		stock: true,
 	},
 	{
 		id: "sillon-copacabana",
@@ -18,7 +18,7 @@ const productos = [
 		descripcion: "Sillón envolvente tapizado en cuero cognac.",
 		alt: "Sillón Copacabana tapizado en cuero color cognac",
 		precio: 1350000,
-		stock: 4,
+		stock: true,
 	},
 	{
 		id: "butaca-mendoza",
@@ -28,7 +28,7 @@ const productos = [
 		descripcion: "Butaca compacta tapizada en bouclé rosa.",
 		alt: "Butaca Mendoza tapizada en bouclé rosa con base de madera",
 		precio: 450000,
-		stock: 8,
+		stock: true,
 	},
 	{
 		id: "mesa-comedor-pampa",
@@ -38,7 +38,7 @@ const productos = [
 		descripcion: "Mesa de comedor de roble macizo.",
 		alt: "Mesa de comedor Pampa de roble macizo",
 		precio: 1700000,
-		stock: 0,
+		stock: false,
 	},
 	{
 		id: "mesa-centro-araucaria",
@@ -48,7 +48,7 @@ const productos = [
 		descripcion: "Mesa baja con mármol y base de nogal.",
 		alt: "Mesa de centro con tapa de mármol y base de madera de nogal",
 		precio: 1250000,
-		stock: 5,
+		stock: true,
 	},
 	{
 		id: "mesa-noche-aconcagua",
@@ -58,7 +58,7 @@ const productos = [
 		descripcion: "Mesa auxiliar de madera con cajón.",
 		alt: "Mesa de noche Aconcagua de madera con cajón",
 		precio: 450000,
-		stock: 9,
+		stock: true,
 	},
 	{
 		id: "aparador-uspallata",
@@ -68,7 +68,7 @@ const productos = [
 		descripcion: "Aparador de nogal con amplio espacio interior.",
 		alt: "Aparador Uspallata de nogal sostenible con puertas",
 		precio: 1400000,
-		stock: 5,
+		stock: true,
 	},
 	{
 		id: "biblioteca-recoleta",
@@ -78,7 +78,7 @@ const productos = [
 		descripcion: "Biblioteca modular de madera y metal.",
 		alt: "Biblioteca modular de madera con estructura metálica verde",
 		precio: 1200000,
-		stock: 4,
+		stock: true,
 	},
 	{
 		id: "escritorio-costa",
@@ -88,17 +88,17 @@ const productos = [
 		descripcion: "Escritorio funcional de bambú laminado.",
 		alt: "Escritorio Costa de bambú laminado con cajones",
 		precio: 650000,
-		stock: 7,
+		stock: true,
 	},
 	{
 		id: "silla-trabajo-belgrano",
 		nombre: "Silla de Trabajo Belgrano",
-		categoria: "Escritorios",
+		categoria: "Asientos",
 		imagen: "assets/images/silla-trabajo-belgrano.png",
 		descripcion: "Silla de trabajo de madera y tapizado.",
 		alt: "Silla de trabajo Belgrano de madera con asiento tapizado",
 		precio: 690000,
-		stock: 10,
+		stock: true,
 	},
 	{
 		id: "sillas-cordoba",
@@ -108,113 +108,100 @@ const productos = [
 		descripcion: "Set de 4 sillas apilables.",
 		alt: "Set de sillas de comedor de madera con asiento verde",
 		precio: 950000,
-		stock: 15,
+		stock: true,
 	},
 ];
 
 /* 
 ====================================================================
 CARGA Y RENDERIZADO DEL CATÁLOGO DE PRODUCTOS
-- Simula una petición asíncrona con Promise + setTimeout.
-- Espera a que el DOM esté listo para buscar #products-grid.
-- Genera las tarjetas del catálogo con createElement y appendChild.
 ==================================================================== 
 */
-const cargarProductos = () =>
-	new Promise((resolve) => {
-		setTimeout(() => {
-			resolve(productos);
-		}, 500);
-	});
-
-document.addEventListener("DOMContentLoaded", async () => {
+function cargarCatalogo() {
 	const productsGrid = document.querySelector("#products-grid");
+	const categoryFilter = document.querySelector("#category-filter");
 	if (!productsGrid) return;
 
-	try {
-		const productosCargados = await cargarProductos();
-
-		productosCargados.forEach((producto) => {
-			const card = document.createElement("li");
-			card.className = "product-card";
-
-			const link = document.createElement("a");
-			link.href = `producto.html?id=${producto.id}`;
-			link.className = "product-card__link";
-			link.setAttribute("aria-label", `Ver detalle de ${producto.nombre}`);
-
-			const media = document.createElement("div");
-			media.className = "product-card__media";
-
-			if (producto.stock === 0) {
-				const badge = document.createElement("span");
-				badge.className = "product-card__badge";
-				badge.textContent = "Sin stock";
-				media.appendChild(badge);
-			}
-
-			const image = document.createElement("img");
-			image.src = producto.imagen;
-			image.alt = producto.alt;
-			image.loading = "lazy";
-
-			const body = document.createElement("div");
-			body.className = "product-card__body";
-
-			const title = document.createElement("h2");
-			title.className = "product-card__title";
-			title.textContent = producto.nombre;
-
-			const desc = document.createElement("p");
-			desc.className = "product-card__desc";
-			desc.textContent = producto.descripcion;
-
-			const footer = document.createElement("div");
-			footer.className = "product-card__footer";
-
-			const price = document.createElement("p");
-			price.className = "product-card__price";
-			price.textContent = new Intl.NumberFormat("es-AR", {
-				style: "currency",
-				currency: "ARS",
-				maximumFractionDigits: 0,
-			}).format(producto.precio);
-
-			const button = document.createElement("button");
-			button.type = "button";
-			button.className = "product-card__btn";
-			button.textContent = "Agregar al carrito";
-			button.setAttribute("aria-label", `Agregar ${producto.nombre} al carrito`);
-
-			if (producto.stock === 0) {
-				button.disabled = true;
-				button.setAttribute("aria-disabled", "true");
-				button.classList.add("is-disabled");
-				button.title = "Sin stock";
+	productsGrid.innerHTML = "";
+	const categoriaSeleccionada = new URLSearchParams(window.location.search)
+		.get("categoria")
+		?.toLowerCase();
+	if (categoryFilter) {
+		categoryFilter.value = categoriaSeleccionada || "";
+		categoryFilter.onchange = () => {
+			const parametros = new URLSearchParams(window.location.search);
+			if (categoryFilter.value) {
+				parametros.set("categoria", categoryFilter.value);
 			} else {
-				button.addEventListener("click", (event) => {
-					event.preventDefault();
-					event.stopPropagation();
-					window.hjCart.add(producto);
-				});
+				parametros.delete("categoria");
 			}
-
-			media.appendChild(image);
-			footer.appendChild(price);
-			footer.appendChild(button);
-			body.appendChild(title);
-			body.appendChild(desc);
-			body.appendChild(footer);
-			link.appendChild(media);
-			link.appendChild(body);
-			card.appendChild(link);
-			productsGrid.appendChild(card);
-		});
-	} catch (error) {
-		console.error("Error al cargar los productos:", error);
+			const nuevaUrl = parametros.toString()
+				? `${window.location.pathname}?${parametros}`
+				: window.location.pathname;
+			window.history.pushState({}, "", nuevaUrl);
+			cargarCatalogo();
+		};
 	}
+	const productosFiltrados = categoriaSeleccionada
+		? productos.filter(
+				(producto) => producto.categoria.toLowerCase() === categoriaSeleccionada,
+			)
+		: productos;
 
-	window.hjCart.updateBadge();
+	productosFiltrados.forEach((producto) => {
+		const item = document.createElement("li");
+		const tarjeta = document.createElement("article");
+		tarjeta.className = "product-card";
+
+		const precio = new Intl.NumberFormat("es-AR", {
+			style: "currency",
+			currency: "ARS",
+			maximumFractionDigits: 0,
+		}).format(producto.precio);
+		const sinStock = !producto.stock;
+
+		tarjeta.innerHTML = `
+			<div class="product-card__media">
+				<a href="producto.html?id=${producto.id}" class="product-card__link" aria-label="Ver detalle de ${producto.nombre}">
+					${sinStock ? '<span class="product-card__badge">Sin stock</span>' : ""}
+					<img src="${producto.imagen}" alt="${producto.alt}" loading="lazy">
+				</a>
+			</div>
+			<div class="product-card__body">
+				<h2 class="product-card__title">
+					<a href="producto.html?id=${producto.id}" class="product-card__link">
+						${producto.nombre}
+					</a>
+				</h2>
+				<p class="product-card__desc">${producto.descripcion}</p>
+				<div class="product-card__footer">
+					<p class="product-card__price">${precio}</p>
+					<button type="button" class="product-card__btn" data-product-id="${producto.id}" aria-label="Agregar ${producto.nombre} al carrito" ${sinStock ? 'disabled aria-disabled="true" title="Sin stock"' : ""}>
+						Agregar al carrito
+					</button>
+				</div>
+			</div>
+		`;
+
+		item.appendChild(tarjeta);
+		productsGrid.appendChild(item);
+	});
+
+	productsGrid.onclick = (event) => {
+		const button = event.target.closest("[data-product-id]");
+		if (!button || button.disabled) return;
+
+		const producto = productos.find(
+			(item) => item.id === button.dataset.productId,
+		);
+		
+		if (producto) window.hjCart.add(producto);
+	};
+
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+	setTimeout(cargarCatalogo, 500);
 });
 
 /*
