@@ -120,12 +120,13 @@ CARGA Y RENDERIZADO DEL CATÁLOGO DE PRODUCTOS
 function cargarCatalogo() {
 	const productsGrid = document.querySelector("#products-grid");
 	const categoryFilter = document.querySelector("#category-filter");
+	const productSearch = document.querySelector("#product-search");
 	if (!productsGrid) return;
 
 	productsGrid.innerHTML = "";
-	const categoriaSeleccionada = new URLSearchParams(window.location.search)
-		.get("categoria")
-		?.toLowerCase();
+	const parametrosActuales = new URLSearchParams(window.location.search);
+	const categoriaSeleccionada = parametrosActuales.get("categoria")?.toLowerCase();
+	const busquedaSeleccionada = parametrosActuales.get("busqueda")?.trim().toLowerCase() || "";
 	if (categoryFilter) {
 		categoryFilter.value = categoriaSeleccionada || "";
 		categoryFilter.onchange = () => {
@@ -142,11 +143,37 @@ function cargarCatalogo() {
 			cargarCatalogo();
 		};
 	}
-	const productosFiltrados = categoriaSeleccionada
-		? productos.filter(
-				(producto) => producto.categoria.toLowerCase() === categoriaSeleccionada,
-			)
-		: productos;
+	if (productSearch) {
+		productSearch.value = parametrosActuales.get("busqueda") || "";
+		productSearch.oninput = () => {
+			const parametros = new URLSearchParams(window.location.search);
+			if (productSearch.value.trim()) {
+				parametros.set("busqueda", productSearch.value.trim());
+			} else {
+				parametros.delete("busqueda");
+			}
+			const nuevaUrl = parametros.toString()
+				? `${window.location.pathname}?${parametros}`
+				: window.location.pathname;
+			window.history.replaceState({}, "", nuevaUrl);
+			cargarCatalogo();
+		};
+	}
+	const productosFiltrados = productos.filter((producto) => {
+		const coincideCategoria =
+			!categoriaSeleccionada || producto.categoria.toLowerCase() === categoriaSeleccionada;
+		const textoProducto = `${producto.nombre} ${producto.descripcion} ${producto.categoria}`.toLowerCase();
+		return coincideCategoria && (!busquedaSeleccionada || textoProducto.includes(busquedaSeleccionada));
+	});
+	if (productosFiltrados.length === 0) {
+		const mensajeVacio = document.createElement("li");
+		mensajeVacio.className = "catalog__empty";
+		mensajeVacio.setAttribute("role", "status");
+		mensajeVacio.textContent = busquedaSeleccionada
+			? "No encontramos productos que coincidan con tu búsqueda."
+			: "No hay productos disponibles para esta categoría.";
+		productsGrid.appendChild(mensajeVacio);
+	}
 
 	productosFiltrados.forEach((producto) => {
 		const item = document.createElement("li");
@@ -195,7 +222,13 @@ function cargarCatalogo() {
 			(item) => item.id === button.dataset.productId,
 		);
 		
-		if (producto) window.hjCart.add(producto);
+		if (producto) {
+			window.hjCart.add(producto);
+			button.classList.add("is-added");
+			window.setTimeout(() => {
+				button.classList.remove("is-added");
+			}, 700);
+		}
 	};
 
 };

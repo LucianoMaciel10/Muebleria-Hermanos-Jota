@@ -85,15 +85,32 @@
         <div class="container">
           <header class="catalog__header">
             <h1 id="catalog-title" class="section-title">Productos</h1>
-            <div class="catalog__filter">
-              <label for="category-filter">Categoría:</label>
-              <select id="category-filter" name="categoria">
-                <option value="">Todas las categorías</option>
-                <option value="asientos">Asientos</option>
-                <option value="mesas">Mesas</option>
-                <option value="almacenamiento">Almacenamiento</option>
-                <option value="escritorios">Escritorios</option>
-              </select>
+            <div class="catalog__controls">
+              <div class="catalog__filter">
+                <label for="category-filter">Categoría:</label>
+                <select id="category-filter" name="categoria">
+                  <option value="">Todas las categorías</option>
+                  <option value="asientos">Asientos</option>
+                  <option value="mesas">Mesas</option>
+                  <option value="almacenamiento">Almacenamiento</option>
+                  <option value="escritorios">Escritorios</option>
+                </select>
+              </div>
+              <div class="catalog__search">
+                <label class="sr-only" for="product-search">Buscar productos</label>
+                <svg class="catalog__search-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <circle cx="10.8" cy="10.8" r="6.8" stroke="currentColor" stroke-width="1.8" />
+                  <path d="m16 16 4.2 4.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                </svg>
+                <input
+                  type="search"
+                  id="product-search"
+                  name="busqueda"
+                  placeholder="buscar..."
+                  aria-label="Buscar productos"
+                  autocomplete="off"
+                />
+              </div>
             </div>
           </header>
 
