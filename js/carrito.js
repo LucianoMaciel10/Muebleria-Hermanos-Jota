@@ -157,6 +157,19 @@ function mostrarVentanaEmergente({ mensaje, mostrarCancelar = false }) {
     });
  
     renderizarCarrito();
+
+   
+  // Implementación del "cargando" para el carrito con hidden= true o false y setTimeout
+  const carritoCargando = document.getElementById("carrito-cargando");
+    carritoCargando.hidden = false;
+    carritoVacio.hidden = true;
+    contenidoCarrito.hidden = true;
+ 
+    setTimeout(() => {
+        carritoCargando.hidden = true;
+        renderizarCarrito();
+    }, 2000);
 });
+
 
 

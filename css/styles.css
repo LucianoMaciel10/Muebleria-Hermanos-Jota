@@ -795,10 +795,17 @@ button { font-family: inherit; cursor: pointer; }
 
 /* 12. CARRITO DE COMPRAS  */
 .pagina-carrito {
+  background: linear-gradient(to top, #f5e5ce 0%, var(--color-alabastro) 45%, var(--color-white) 100%);
   padding-block: 2.5rem 3.5rem;
   background-color: var(--color-white);
   min-height: 50vh;
   flex: 1 0 auto;
+}
+.mensaje-carrito-cargando {
+    text-align: center;
+    padding: 3rem 1rem;
+    font-size: 1.1rem;
+    color: #666;
 }
 
 .contenedor-carrito {
