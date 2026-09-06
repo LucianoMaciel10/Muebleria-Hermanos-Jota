@@ -149,6 +149,17 @@ function mostrarVentanaEmergente({ mensaje, mostrarCancelar = false }) {
 
     // Finalizar Compra
     botonComprar.addEventListener("click", async () => {
+        const aceptar = await mostrarVentanaEmergente({
+            mensaje: "¿Estás seguro de que deseas finalizar la compra?",
+            mostrarCancelar: true
+        });
+        if (aceptar) {
+            window.hjCart.set([]);
+            renderizarCarrito();
+        }
+       if (!aceptar) {
+            return;
+        }
         await mostrarVentanaEmergente({
             mensaje: "¡Gracias por tu compra en Mueblería Hermanos Jota! Procesando el pedido..."
         });
@@ -156,7 +167,7 @@ function mostrarVentanaEmergente({ mensaje, mostrarCancelar = false }) {
         renderizarCarrito();
     });
  
-    renderizarCarrito();
+    
 
    
   // Implementación del "cargando" para el carrito con hidden= true o false y setTimeout
