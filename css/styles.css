@@ -734,6 +734,12 @@ button { font-family: inherit; cursor: pointer; }
   outline: 3px solid var(--color-oro);
   outline-offset: -3px;
 }
+.loading-productos {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #666;
+  padding: 3.8rem 1rem;
+}
 
 @media (max-width: 1085px) {
   .catalog .product-card__footer {
@@ -819,7 +825,6 @@ button { font-family: inherit; cursor: pointer; }
 
 /* 12. CARRITO DE COMPRAS  */
 .pagina-carrito {
-  background: linear-gradient(to top, #f5e5ce 0%, var(--color-alabastro) 45%, var(--color-white) 100%);
   padding-block: 2.5rem 3.5rem;
   background-color: var(--color-white);
   min-height: 50vh;
@@ -1323,7 +1328,7 @@ button { font-family: inherit; cursor: pointer; }
 
 /*  contacto estilo  */
 
-#main {
+.pagina-contacto {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1337,7 +1342,7 @@ button { font-family: inherit; cursor: pointer; }
   gap: var(--gap);
   width: 100%;
   max-width: 480px;
-  background-color: var(--color-white);
+  background: var(--color-alabastro);
   padding: 2.5rem;
   border-radius: var(--radius);
   box-shadow: var(--shadow);
@@ -1385,7 +1390,7 @@ button { font-family: inherit; cursor: pointer; }
   width: 100%;
   padding: 0.9rem;
   margin-top: 0.5rem;
-  background-color: var(--color-dark);
+  background-color: var(--color-siena);
   color: var(--color-white);
   border: none;
   border-radius: calc(var(--radius) / 2);
@@ -1397,6 +1402,6 @@ button { font-family: inherit; cursor: pointer; }
 }
 
 .enviar-form:hover {
-  background-color: var(--color-siena);
+  background-color: #8a4425;
 }
 

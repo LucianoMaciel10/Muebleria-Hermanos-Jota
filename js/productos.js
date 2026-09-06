@@ -118,11 +118,13 @@ CARGA Y RENDERIZADO DEL CATÁLOGO DE PRODUCTOS
 ==================================================================== 
 */
 function cargarCatalogo() {
+	const loading = document.querySelector(".loading-productos");
 	const productsGrid = document.querySelector("#products-grid");
 	const categoryFilter = document.querySelector("#category-filter");
 	const productSearch = document.querySelector("#product-search");
 	if (!productsGrid) return;
 
+	loading.style.display = "none";
 	productsGrid.innerHTML = "";
 	const parametrosActuales = new URLSearchParams(window.location.search);
 	const categoriaSeleccionada = parametrosActuales.get("categoria")?.toLowerCase();
