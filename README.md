@@ -1,4 +1,4 @@
-# Mueblería Hermanos Jota
+# Mueblería Hermanos Jota - Sprint 1 y 2
 
 E-commerce de mobiliario artesanal argentino. El sitio permite explorar un catálogo de productos, ver el detalle de cada pieza y gestionar un carrito de compras, todo con una estética cuidada centrada en diseño atemporal y materiales sustentables.
 
