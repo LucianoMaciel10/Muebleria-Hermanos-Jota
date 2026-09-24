@@ -91,9 +91,7 @@ function Navbar({ vista, onNavigate, cantidadCarrito }) {
             <circle cx="9.5" cy="19.5" r="1.4" fill="currentColor" />
             <circle cx="17.5" cy="19.5" r="1.4" fill="currentColor" />
           </svg>
-          {cantidadCarrito > 0 && (
-            <span className="cart-link__count">{cantidadCarrito}</span>
-          )}
+          {<span className="cart-link__count">{cantidadCarrito}</span>}
         </a>
       </div>
     </header>
