@@ -3,12 +3,17 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./components/Home";
 
-import Carrito from "./components/carrito.jsx";
+import Carrito from "./components/Carrito";
 
 
 function App() {
   const [vista, setVista] = useState("inicio");
-  const [carrito, setCarrito] = useState([]);
+  //prueba de carrito con productos
+const [carrito, setCarrito] = useState([
+    { id: "sofa-patagonia", nombre: "Sofá Patagonia", precio: 450000, cantidad: 2, imagen: "" },
+    { id: "mesa-comedor-pampa", nombre: "Mesa de comedor Pampa", precio: 320000, cantidad: 1, imagen: "" },
+  ]);
+
   const [productos, setProductos] = useState([]);
   const [cargandoProductos, setCargandoProductos] = useState(true);
   const [errorProductos, setErrorProductos] = useState(null);
@@ -33,7 +38,7 @@ function App() {
 
   const cantidadCarrito = carrito.reduce((acc, item) => acc + item.cantidad, 0);
 
-// Agrega el productoo suma 1 si ya estaba en el carrito
+// Agrega el productoo ,suma 1 si ya estaba en el carrito
 const agregarAlCarrito = (productoNuevo) => {
   setCarrito((carritoAnterior) => {
     const yaExiste = carritoAnterior.find(
@@ -49,33 +54,6 @@ const agregarAlCarrito = (productoNuevo) => {
     return [...carritoAnterior, { ...productoNuevo, cantidad: 1 }];
   });
 };
-
-const cambiarCantidad = (id, nuevaCantidad) => {
-  if (nuevaCantidad < 1) return;
-  setCarrito((carritoAnterior) =>
-    carritoAnterior.map((producto) =>
-      producto.id === id ? { ...producto, cantidad: nuevaCantidad } : producto
-    )
-  );
-};
-
-// Elimina un producto 
-const eliminarDelCarrito = (id) => {
-  setCarrito((carritoAnterior) =>
-    carritoAnterior.filter((producto) => producto.id !== id)
-  );
-};
-const vaciarCarrito = () => setCarrito([]);
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -102,16 +80,13 @@ const vaciarCarrito = () => setCarrito([]);
             <h1>Productos</h1>
           </div>
         )}
-        {vista === "carrito" && (
-  <div className="container">
-    <Carrito
-      carrito={carrito}
-      alCambiarCantidad={cambiarCantidad}
-      alEliminar={eliminarDelCarrito}
-      alVaciar={vaciarCarrito}
-    />
-  </div>
-)}
+       {vista === "carrito" && (
+          <Carrito
+            carrito={carrito}
+            setCarrito={setCarrito}
+            onNavigate={setVista}
+          />
+        )}
         {vista === "contacto" && (
           <div className="container">
             <h1>Contacto</h1>
