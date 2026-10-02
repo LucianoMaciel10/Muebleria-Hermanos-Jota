@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./components/Home";
+import ProductList from "./components/catalogo/ProductList";
+import ProductDetail from "./components/catalogo/ProductDetail";
 
 import Carrito from "./components/Carrito";
 
@@ -9,7 +11,7 @@ import Carrito from "./components/Carrito";
 function App() {
   const [vista, setVista] = useState("inicio");
   //prueba de carrito con productos
-const [carrito, setCarrito] = useState([
+  const [carrito, setCarrito] = useState([
     { id: "sofa-patagonia", nombre: "Sofá Patagonia", precio: 450000, cantidad: 2, imagen: "" },
     { id: "mesa-comedor-pampa", nombre: "Mesa de comedor Pampa", precio: 320000, cantidad: 1, imagen: "" },
   ]);
@@ -17,26 +19,41 @@ const [carrito, setCarrito] = useState([
   const [productos, setProductos] = useState([]);
   const [cargandoProductos, setCargandoProductos] = useState(true);
   const [errorProductos, setErrorProductos] = useState(null);
+  const [productoSeleccionado, setProductoSeleccionado] = useState(null);
+  const [categoriaSeleccionada, setCategoria] = useState('');
+  const [busqueda, setBusqueda] = useState('');
 
   useEffect(() => {
+    const abortController = new AbortController();
     async function cargarProductos() {
+      setCargandoProductos(true);
+      setErrorProductos(null);
       try {
-        const respuesta = await fetch("/api/productos");
+        const url = new URL('http://localhost:3000/api/productos');
+        if (categoriaSeleccionada) url.searchParams.append('categoria', categoriaSeleccionada);
+        if (busqueda) url.searchParams.append('busqueda', busqueda);
+        const respuesta = await fetch(url, { signal: abortController.signal });
         if (!respuesta.ok) {
           throw new Error(`Error ${respuesta.status} al obtener los productos`);
         }
         const data = await respuesta.json();
         setProductos(data);
       } catch (err) {
-        setErrorProductos(err.message);
+        if (err.name !== 'AbortError') {
+          setErrorProductos(err.message);
+        }
       } finally {
-        setCargandoProductos(false);
+        if (!abortController.signal.aborted) {
+          setCargandoProductos(false);
+        }
       }
     }
     cargarProductos();
-  }, []);
+    return () => abortController.abort(); 
+  }, [categoriaSeleccionada, busqueda]);
 
   const cantidadCarrito = carrito.reduce((acc, item) => acc + item.cantidad, 0);
+
 
 // Agrega el productoo ,suma 1 si ya estaba en el carrito
 const agregarAlCarrito = (productoNuevo) => {
@@ -54,8 +71,6 @@ const agregarAlCarrito = (productoNuevo) => {
     return [...carritoAnterior, { ...productoNuevo, cantidad: 1 }];
   });
 };
-
-
 
 
   return (
@@ -76,11 +91,31 @@ const agregarAlCarrito = (productoNuevo) => {
           />
         )}
         {vista === "productos" && (
-          <div className="container">
-            <h1>Productos</h1>
-          </div>
+          productoSeleccionado ? (
+            <ProductDetail
+              producto={productoSeleccionado}
+              onAgregar={agregarAlCarrito}
+              onVolver={() => setProductoSeleccionado(null)}
+            />
+          ) : (
+            <section className='catalog' aria-labelledby='catalog-title'>
+              <div className='container'>
+                <ProductList 
+                  productos={productos}
+                  cargando={cargandoProductos}
+                  error={errorProductos}
+                  onAgregar={agregarAlCarrito}
+                  onVerDetalle={setProductoSeleccionado}
+                  categoriaSeleccionada={categoriaSeleccionada}
+                  setCategoria={setCategoria}
+                  busqueda={busqueda}
+                  setBusqueda={setBusqueda}
+                />
+              </div>
+            </section>
+          )
         )}
-       {vista === "carrito" && (
+        {vista === "carrito" && (
           <Carrito
             carrito={carrito}
             setCarrito={setCarrito}
