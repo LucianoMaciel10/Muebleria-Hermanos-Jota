@@ -3,7 +3,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./components/Home";
 import ProductList from "./components/catalogo/ProductList";
-import ProductDetail from "./components/catalogo/ProductDetail";
+//import ProductDetail from "./components/catalogo/ProductDetail";
 
 import Carrito from "./components/Carrito";
 
@@ -19,7 +19,7 @@ function App() {
   const [productos, setProductos] = useState([]);
   const [cargandoProductos, setCargandoProductos] = useState(true);
   const [errorProductos, setErrorProductos] = useState(null);
-  const [productoSeleccionado, setProductoSeleccionado] = useState(null);
+  //const [productoSeleccionado, setProductoSeleccionado] = useState(null);
   const [categoriaSeleccionada, setCategoria] = useState('');
   const [busqueda, setBusqueda] = useState('');
 
@@ -29,10 +29,11 @@ function App() {
       setCargandoProductos(true);
       setErrorProductos(null);
       try {
-        const url = new URL('http://localhost:3000/api/productos');
-        if (categoriaSeleccionada) url.searchParams.append('categoria', categoriaSeleccionada);
-        if (busqueda) url.searchParams.append('busqueda', busqueda);
-        const respuesta = await fetch(url, { signal: abortController.signal });
+        const parametros = new URLSearchParams();
+        if (categoriaSeleccionada) parametros.set('categoria', categoriaSeleccionada);
+        if (busqueda) parametros.set('busqueda', busqueda);
+        const ruta = `/api/productos${parametros.size ? `?${parametros}` : ''}`;
+        const respuesta = await fetch(ruta, { signal: abortController.signal });
         if (!respuesta.ok) {
           throw new Error(`Error ${respuesta.status} al obtener los productos`);
         }
@@ -91,13 +92,13 @@ const agregarAlCarrito = (productoNuevo) => {
           />
         )}
         {vista === "productos" && (
-          productoSeleccionado ? (
+          /*productoSeleccionado ? (
             <ProductDetail
               producto={productoSeleccionado}
               onAgregar={agregarAlCarrito}
               onVolver={() => setProductoSeleccionado(null)}
             />
-          ) : (
+          ) : */(
             <section className='catalog' aria-labelledby='catalog-title'>
               <div className='container'>
                 <ProductList 
@@ -105,7 +106,7 @@ const agregarAlCarrito = (productoNuevo) => {
                   cargando={cargandoProductos}
                   error={errorProductos}
                   onAgregar={agregarAlCarrito}
-                  onVerDetalle={setProductoSeleccionado}
+                  //onVerDetalle={setProductoSeleccionado}
                   categoriaSeleccionada={categoriaSeleccionada}
                   setCategoria={setCategoria}
                   busqueda={busqueda}

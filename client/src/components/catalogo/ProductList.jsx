@@ -3,7 +3,7 @@ import HeaderCatalog from "./HeaderCatalog";
 
 function ProductList({ categoriaSeleccionada, setCategoria, 
     busqueda, setBusqueda, productos, 
-    cargando, error, onAgregar, onVerDetalle  }) {
+    cargando, error, onAgregar, /*onVerDetalle */}) {
   return (
     <>
       <HeaderCatalog
@@ -34,7 +34,7 @@ function ProductList({ categoriaSeleccionada, setCategoria,
                 key={producto.id}
                 producto={producto}
                 onAgregar={() => onAgregar(producto)}
-                onVerDetalle={() => onVerDetalle(producto)}
+                //onVerDetalle={() => onVerDetalle(producto)}
               />
             ))
           }

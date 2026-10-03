@@ -1,32 +1,37 @@
-function ProductCard({ producto, onAgregar, onVerDetalle }) {
+function ProductCard({ producto, onAgregar, /*onVerDetalle */}) {
+  /* const handlerVerDetalle = (event) => {
+    event.preventDefault();
+    onVerDetalle();
+  }; */
+
   return (
     <li>
       <article className="product-card">
         <div className="product-card__media">
-          <a 
+          {/*<a 
             href="#"
             className="product-card__link"
-            onClick={(e) => {e.preventDefault(); onVerDetalle(producto); }} 
+            onClick={handlerVerDetalle}
             aria-label={`Ver detalle de ${producto.nombre}`}
-          >
+          > */}
             <img 
               src={producto.imagen} 
               alt={producto.alt}
               loading="lazy" 
             />
-          </a>
+          {/*</a> */}
         </div>
         
         <div className="product-card__body">
           <h3 className="product-card__title">
-            <a 
+            {/* <a 
               href="#"
               className="product-card__link"
-              onClick={(e) => {e.preventDefault(); onVerDetalle(producto); }} 
+              onClick={handlerVerDetalle}
               aria-label={`Ver detalle de ${producto.nombre}`}
-            >
+            > */}
               {producto.nombre}
-            </a>
+            {/* </a> */}
           </h3>
           <p className="product-card__desc">{producto.descripcion}</p>
 
