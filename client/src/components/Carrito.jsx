@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 const TASA_IVA = 0.21;
 
@@ -11,32 +11,21 @@ const formatearMoneda = (monto) =>
   }).format(monto);
 
 function Carrito({ carrito, setCarrito, onNavigate }) {
-  const [cargando, setCargando] = useState(true);
-  
   const [ventana, setVentana] = useState(null);
 
-  // Set timeout para simular la carga del carrito
-  useEffect(() => {
-    const temporizador = setTimeout(() => setCargando(false), 2000);
-    return () => clearTimeout(temporizador);
-  }, []);
-
-  
   const cambiarCantidad = (id, cambio) => {
     setCarrito((carritoAnterior) =>
-      carritoAnterior
-        .map((producto) =>
-          producto.id === id
-            ? { ...producto, cantidad: producto.cantidad + cambio }
-            : producto
-        )
-        .filter((producto) => producto.cantidad > 0)
+      carritoAnterior.map((producto) =>
+        producto.id === id && producto.cantidad + cambio > 0
+          ? { ...producto, cantidad: producto.cantidad + cambio }
+          : producto,
+      ),
     );
   };
-  
+
   const eliminarProducto = (id) => {
     setCarrito((carritoAnterior) =>
-      carritoAnterior.filter((producto) => producto.id !== id)
+      carritoAnterior.filter((producto) => producto.id !== id),
     );
   };
 
@@ -79,7 +68,7 @@ function Carrito({ carrito, setCarrito, onNavigate }) {
   const subtotal = carrito.reduce(
     (acumulado, producto) =>
       acumulado + Number(producto.precio) * Number(producto.cantidad),
-    0
+    0,
   );
   const impuesto = subtotal * TASA_IVA;
   const total = subtotal + impuesto;
@@ -89,13 +78,7 @@ function Carrito({ carrito, setCarrito, onNavigate }) {
       <div className="contenedor-carrito">
         <h1 className="titulo-carrito">Tu carrito</h1>
 
-        {cargando && (
-          <p className="mensaje-carrito-cargando" role="status">
-            Cargando tu carrito...
-          </p>
-        )}
-
-        {!cargando && carrito.length === 0 && (
+        {carrito.length === 0 && (
           <div className="mensaje-carrito-vacio">
             <h2>Tu carrito está vacío</h2>
             <button
@@ -108,7 +91,7 @@ function Carrito({ carrito, setCarrito, onNavigate }) {
           </div>
         )}
 
-        {!cargando && carrito.length > 0 && (
+        {carrito.length > 0 && (
           <div className="layout-carrito">
             <div className="lista-elementos-carrito">
               {carrito.map((producto) => (
@@ -214,7 +197,10 @@ function Carrito({ carrito, setCarrito, onNavigate }) {
             aria-modal="true"
             aria-labelledby="ventana-emergente-titulo"
           >
-            <h2 id="ventana-emergente-titulo" className="ventana-emergente-titulo">
+            <h2
+              id="ventana-emergente-titulo"
+              className="ventana-emergente-titulo"
+            >
               {ventana.titulo}
             </h2>
             <p className="ventana-emergente-mensaje">{ventana.mensaje}</p>
