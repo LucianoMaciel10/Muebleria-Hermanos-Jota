@@ -31,7 +31,8 @@ function App() {
           if (categoriaSeleccionada)
             parametros.set("categoria", categoriaSeleccionada);
           if (busqueda) parametros.set("busqueda", busqueda);
-          const ruta = `/api/productos${parametros.size ? `?${parametros}` : ""}`;
+          const base = import.meta.env.VITE_API_URL || "";
+          const ruta = `${base}/api/productos${parametros.size ? `?${parametros}` : ""}`;
           const respuesta = await fetch(ruta, {
             signal: abortController.signal,
           });
