@@ -6,61 +6,17 @@ import ProductList from "./components/catalogo/ProductList";
 //import ProductDetail from "./components/catalogo/ProductDetail";
 
 import Carrito from "./components/Carrito";
+import { useProductos } from "./hooks/useProductos";
 
 function App() {
   const [vista, setVista] = useState("inicio");
   const [carrito, setCarrito] = useState(
     () => JSON.parse(localStorage.getItem("carrito")) || [],
   );
-  const [productos, setProductos] = useState([]);
-  const [cargandoProductos, setCargandoProductos] = useState(true);
-  const [errorProductos, setErrorProductos] = useState(null);
   //const [productoSeleccionado, setProductoSeleccionado] = useState(null);
   const [categoriaSeleccionada, setCategoria] = useState("");
   const [busqueda, setBusqueda] = useState("");
-
-  useEffect(() => {
-    const abortController = new AbortController();
-
-    const temporizador = setTimeout(async () => {
-      async function cargarProductos() {
-        setCargandoProductos(true);
-        setErrorProductos(null);
-        try {
-          const parametros = new URLSearchParams();
-          if (categoriaSeleccionada)
-            parametros.set("categoria", categoriaSeleccionada);
-          if (busqueda) parametros.set("busqueda", busqueda);
-          const base = import.meta.env.VITE_API_URL || "";
-          const ruta = `${base}/api/productos${parametros.size ? `?${parametros}` : ""}`;
-          const respuesta = await fetch(ruta, {
-            signal: abortController.signal,
-          });
-          if (!respuesta.ok) {
-            throw new Error(
-              `Error ${respuesta.status} al obtener los productos`,
-            );
-          }
-          const data = await respuesta.json();
-          setProductos(data);
-        } catch (err) {
-          if (err.name !== "AbortError") {
-            setErrorProductos(err.message);
-          }
-        } finally {
-          if (!abortController.signal.aborted) {
-            setCargandoProductos(false);
-          }
-        }
-      }
-      cargarProductos();
-    }, 400);
-
-    return () => {
-      clearTimeout(temporizador);
-      abortController.abort();
-    };
-  }, [categoriaSeleccionada, busqueda]);
+  const { productos, cargando: cargandoProductos, error: errorProductos } = useProductos(categoriaSeleccionada, busqueda);
 
   useEffect(() => {
     localStorage.setItem("carrito", JSON.stringify(carrito));
@@ -100,6 +56,7 @@ function App() {
             productos={productos}
             cargando={cargandoProductos}
             error={errorProductos}
+            setCategoria={setCategoria}
           />
         )}
         {vista === "productos" && (

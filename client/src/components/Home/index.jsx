@@ -11,7 +11,7 @@ const IDS_DESTACADOS = [
   "biblioteca-recoleta",
 ];
 
-function Home({ onNavigate, productos, cargando, error }) {
+function Home({ onNavigate, productos, cargando, error, setCategoria }) {
   const destacados = IDS_DESTACADOS.map((id) =>
     productos.find((p) => p.id === id),
   ).filter(Boolean);
@@ -20,7 +20,7 @@ function Home({ onNavigate, productos, cargando, error }) {
     <>
       <Hero onNavigate={onNavigate} />
       <Essence />
-      <Collections onNavigate={onNavigate} />
+      <Collections onNavigate={onNavigate} setCategoria={setCategoria} />
       <FeaturedProducts
         destacados={destacados}
         cargando={cargando}

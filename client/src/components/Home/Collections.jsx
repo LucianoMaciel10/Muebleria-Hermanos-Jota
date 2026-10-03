@@ -25,10 +25,11 @@ const COLECCIONES = [
   },
 ];
 
-function Collections({ onNavigate }) {
-  const ir = (e, destino) => {
+function Collections({ onNavigate, setCategoria }) {
+  const ir = (e, categoria) => {
     e.preventDefault();
-    onNavigate(destino);
+    setCategoria(categoria)
+    onNavigate("productos");
   };
 
   return (
@@ -41,7 +42,7 @@ function Collections({ onNavigate }) {
               key={coleccion.categoria}
               href="#"
               className="collection-card"
-              onClick={(e) => ir(e, "productos")}
+              onClick={(e) => ir(e, coleccion.categoria)}
             >
               <img src={coleccion.imagen} alt={coleccion.alt} />
               <span className="collection-card__label">{coleccion.label}</span>
