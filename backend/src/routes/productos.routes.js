@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const productos = require("../data/productos");
 
-function textoNormal(texto) {
+function TextoNormal(texto) {
   return texto
     .toLowerCase()
     .normalize("NFD")
@@ -17,16 +17,16 @@ router.get("/", (req, res) => {
 
   if (categoria) {
     resultado = resultado.filter(
-      (p) => textoNormal(p.categoria) === textoNormal(categoria)
+      (p) => TextoNormal(p.categoria) === TextoNormal(categoria)
     );
   }
 
   if (busqueda) {
-    const termino = textoNormal(busqueda);
+    const termino = TextoNormal(busqueda);
     resultado = resultado.filter(
       (p) =>
-        textoNormal(p.nombre).includes(termino) ||
-        textoNormal(p.descripcion).includes(termino)
+        TextoNormal(p.nombre).includes(termino) ||
+        TextoNormal(p.descripcion).includes(termino)
     );
   }
 
