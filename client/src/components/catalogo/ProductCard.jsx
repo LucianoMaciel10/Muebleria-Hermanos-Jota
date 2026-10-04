@@ -1,8 +1,8 @@
-function ProductCard({ producto, onAgregar /*onVerDetalle */ }) {
-  /* const handlerVerDetalle = (event) => {
+function ProductCard({ producto, onAgregar, onVerDetalle }) {
+  const handlerVerDetalle = (event) => {
     event.preventDefault();
-    onVerDetalle();
-  }; */
+    onVerDetalle(producto.id);
+  };
 
   return (
     <li>
@@ -11,26 +11,26 @@ function ProductCard({ producto, onAgregar /*onVerDetalle */ }) {
           {!producto.stock && (
             <span className="product-card__badge">Sin stock</span>
           )}
-          {/*<a 
+          <a
             href="#"
             className="product-card__link"
             onClick={handlerVerDetalle}
             aria-label={`Ver detalle de ${producto.nombre}`}
-          > */}
-          <img src={producto.imagen} alt={producto.alt} loading="lazy" />
-          {/*</a> */}
+          >
+            <img src={producto.imagen} alt={producto.alt} loading="lazy" />
+          </a>
         </div>
 
         <div className="product-card__body">
           <h3 className="product-card__title">
-            {/* <a 
+            <a
               href="#"
               className="product-card__link"
               onClick={handlerVerDetalle}
               aria-label={`Ver detalle de ${producto.nombre}`}
-            > */}
-            {producto.nombre}
-            {/* </a> */}
+            >
+              {producto.nombre}
+            </a>
           </h3>
           <p className="product-card__desc">{producto.descripcion}</p>
 

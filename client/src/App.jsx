@@ -4,7 +4,7 @@ import Footer from "./components/Footer";
 import Home from "./components/Home";
 import ProductList from "./components/catalogo/ProductList";
 import toast, { Toaster } from "react-hot-toast";
-//import ProductDetail from "./components/catalogo/ProductDetail";
+import ProductDetail from "./components/catalogo/ProductDetail";
 
 import Carrito from "./components/Carrito";
 import { useProductos } from "./hooks/useProductos";
@@ -15,7 +15,7 @@ function App() {
   const [carrito, setCarrito] = useState(
     () => JSON.parse(localStorage.getItem("carrito")) || [],
   );
-  //const [productoSeleccionado, setProductoSeleccionado] = useState(null);
+  const [productoSeleccionado, setProductoSeleccionado] = useState(null);
   const [categoriaSeleccionada, setCategoria] = useState("");
   const [busqueda, setBusqueda] = useState("");
   const {
@@ -31,7 +31,7 @@ function App() {
   const cantidadCarrito = carrito.reduce((acc, item) => acc + item.cantidad, 0);
 
   // Agrega el productoo ,suma 1 si ya estaba en el carrito
-  const agregarAlCarrito = (productoNuevo) => {
+  const agregarAlCarrito = (productoNuevo, cantidad = null) => {
     let mensaje = `${productoNuevo.nombre} agregado al carrito`;
 
     setCarrito((carritoAnterior) => {
@@ -39,14 +39,23 @@ function App() {
         (producto) => producto.id === productoNuevo.id,
       );
       if (yaExiste) {
-        mensaje = `${productoNuevo.nombre} ya estaba en el carrito, se sumó una unidad`;
+        mensaje = `${productoNuevo.nombre} ya estaba en el carrito, se sumó ${cantidad ? `${cantidad} unidades` : "una unidad"}`;
         return carritoAnterior.map((producto) =>
           producto.id === productoNuevo.id
-            ? { ...producto, cantidad: producto.cantidad + 1 }
+            ? {
+                ...producto,
+                cantidad: cantidad
+                  ? producto.cantidad + cantidad
+                  : producto.cantidad + 1,
+              }
             : producto,
         );
       }
-      return [...carritoAnterior, { ...productoNuevo, cantidad: 1 }];
+
+      return [
+        ...carritoAnterior,
+        { ...productoNuevo, cantidad: cantidad ? cantidad : 1 },
+      ];
     });
 
     toast.success(mensaje, {
@@ -56,9 +65,10 @@ function App() {
   };
 
   const navegarA = (destino) => {
-    if (destino === "inicio") {
+    if (destino !== "productos") {
       setCategoria("");
       setBusqueda("");
+      setProductoSeleccionado(null);
     }
     setVista(destino);
   };
@@ -80,36 +90,39 @@ function App() {
             cargando={cargandoProductos}
             error={errorProductos}
             setCategoria={setCategoria}
+            onVerDetalle={setProductoSeleccionado}
           />
         )}
-        {vista === "productos" && (
-          /*productoSeleccionado ? (
+        {vista === "productos" &&
+          (productoSeleccionado ? (
             <ProductDetail
-              producto={productoSeleccionado}
+              productoId={productoSeleccionado}
               onAgregar={agregarAlCarrito}
               onVolver={() => setProductoSeleccionado(null)}
             />
-          ) : */ <section className="catalog" aria-labelledby="catalog-title">
-            <div className="container">
-              <ProductList
-                productos={productos}
-                cargando={cargandoProductos}
-                error={errorProductos}
-                onAgregar={agregarAlCarrito}
-                //onVerDetalle={setProductoSeleccionado}
-                categoriaSeleccionada={categoriaSeleccionada}
-                setCategoria={setCategoria}
-                busqueda={busqueda}
-                setBusqueda={setBusqueda}
-              />
-            </div>
-          </section>
-        )}
+          ) : (
+            <section className="catalog" aria-labelledby="catalog-title">
+              <div className="container">
+                <ProductList
+                  productos={productos}
+                  cargando={cargandoProductos}
+                  error={errorProductos}
+                  onAgregar={agregarAlCarrito}
+                  onVerDetalle={setProductoSeleccionado}
+                  categoriaSeleccionada={categoriaSeleccionada}
+                  setCategoria={setCategoria}
+                  busqueda={busqueda}
+                  setBusqueda={setBusqueda}
+                />
+              </div>
+            </section>
+          ))}
         {vista === "carrito" && (
           <Carrito
             carrito={carrito}
             setCarrito={setCarrito}
             onNavigate={navegarA}
+            setProductoSeleccionado={setProductoSeleccionado}
           />
         )}
         {vista === "contacto" && <ContactForm />}

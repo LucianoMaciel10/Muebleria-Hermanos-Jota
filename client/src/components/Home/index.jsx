@@ -11,7 +11,14 @@ const IDS_DESTACADOS = [
   "biblioteca-recoleta",
 ];
 
-function Home({ onNavigate, productos, cargando, error, setCategoria }) {
+function Home({
+  onNavigate,
+  productos,
+  cargando,
+  error,
+  setCategoria,
+  onVerDetalle,
+}) {
   const destacados = IDS_DESTACADOS.map((id) =>
     productos.find((p) => p.id === id),
   ).filter(Boolean);
@@ -20,12 +27,17 @@ function Home({ onNavigate, productos, cargando, error, setCategoria }) {
     <>
       <Hero onNavigate={onNavigate} />
       <Essence />
-      <Collections onNavigate={onNavigate} setCategoria={setCategoria} />
+      <Collections
+        onNavigate={onNavigate}
+        setCategoria={setCategoria}
+        onVerDetalle={onVerDetalle}
+      />
       <FeaturedProducts
         destacados={destacados}
         cargando={cargando}
         error={error}
         onNavigate={onNavigate}
+        onVerDetalle={onVerDetalle}
       />
       <Commitment />
     </>

@@ -10,7 +10,7 @@ const formatearMoneda = (monto) =>
     maximumFractionDigits: 0,
   }).format(monto);
 
-function Carrito({ carrito, setCarrito, onNavigate }) {
+function Carrito({ carrito, setCarrito, onNavigate, setProductoSeleccionado }) {
   const [ventana, setVentana] = useState(null);
 
   const cambiarCantidad = (id, cambio) => {
@@ -99,6 +99,11 @@ function Carrito({ carrito, setCarrito, onNavigate }) {
                   <div className="elemento-carrito__imagen-contenedor">
                     {producto.imagen && (
                       <img
+                        onClick={() => {
+                          setProductoSeleccionado(producto.id);
+                          onNavigate("productos");
+                        }}
+                        style={{ cursor: "pointer" }}
                         src={producto.imagen}
                         alt={producto.alt || producto.nombre}
                         className="elemento-carrito__img"
@@ -108,7 +113,15 @@ function Carrito({ carrito, setCarrito, onNavigate }) {
 
                   <div className="elemento-carrito__detalles">
                     <h3 className="elemento-carrito__titulo">
-                      {producto.nombre}
+                      <span
+                        onClick={() => {
+                          setProductoSeleccionado(producto.id);
+                          onNavigate("productos");
+                        }}
+                        style={{ cursor: "pointer" }}
+                      >
+                        {producto.nombre}
+                      </span>
                     </h3>
                     <p className="elemento-carrito__precio">
                       {formatearMoneda(producto.precio)}

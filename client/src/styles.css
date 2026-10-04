@@ -999,6 +999,13 @@ button {
   background-color: var(--color-white);
 }
 
+.product-detail .btn-vaciar {
+  margin-bottom: 1.5rem;
+  width: auto;
+  padding: 0.6rem 1.25rem;
+  font-size: 0.8rem;
+}
+
 .product-detail__message {
   padding-block: 2rem;
   color: var(--color-text-soft);
