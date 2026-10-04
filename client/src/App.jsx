@@ -17,7 +17,11 @@ function App() {
   //const [productoSeleccionado, setProductoSeleccionado] = useState(null);
   const [categoriaSeleccionada, setCategoria] = useState("");
   const [busqueda, setBusqueda] = useState("");
-  const { productos, cargando: cargandoProductos, error: errorProductos } = useProductos(categoriaSeleccionada, busqueda);
+  const {
+    productos,
+    cargando: cargandoProductos,
+    error: errorProductos,
+  } = useProductos(categoriaSeleccionada, busqueda);
 
   useEffect(() => {
     localStorage.setItem("carrito", JSON.stringify(carrito));
@@ -42,18 +46,26 @@ function App() {
     });
   };
 
+  const navegarA = (destino) => {
+    if (destino === "inicio") {
+      setCategoria("");
+      setBusqueda("");
+    }
+    setVista(destino);
+  };
+
   return (
     <>
       <Navbar
         vista={vista}
-        onNavigate={setVista}
+        onNavigate={navegarA}
         cantidadCarrito={cantidadCarrito}
       />
 
       <main id="main">
         {vista === "inicio" && (
           <Home
-            onNavigate={setVista}
+            onNavigate={navegarA}
             productos={productos}
             cargando={cargandoProductos}
             error={errorProductos}
@@ -87,13 +99,13 @@ function App() {
           <Carrito
             carrito={carrito}
             setCarrito={setCarrito}
-            onNavigate={setVista}
+            onNavigate={navegarA}
           />
         )}
         {vista === "contacto" && <ContactForm />}
       </main>
 
-      <Footer onNavigate={setVista} />
+      <Footer onNavigate={navegarA} />
     </>
   );
 }
