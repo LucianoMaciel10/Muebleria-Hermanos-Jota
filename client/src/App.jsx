@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./components/Home";
 import ProductList from "./components/catalogo/ProductList";
+import toast, { Toaster } from "react-hot-toast";
 //import ProductDetail from "./components/catalogo/ProductDetail";
 
 import Carrito from "./components/Carrito";
@@ -31,11 +32,14 @@ function App() {
 
   // Agrega el productoo ,suma 1 si ya estaba en el carrito
   const agregarAlCarrito = (productoNuevo) => {
+    let mensaje = `${productoNuevo.nombre} agregado al carrito`;
+
     setCarrito((carritoAnterior) => {
       const yaExiste = carritoAnterior.find(
         (producto) => producto.id === productoNuevo.id,
       );
       if (yaExiste) {
+        mensaje = `${productoNuevo.nombre} ya estaba en el carrito, se sumó una unidad`;
         return carritoAnterior.map((producto) =>
           producto.id === productoNuevo.id
             ? { ...producto, cantidad: producto.cantidad + 1 }
@@ -43,6 +47,11 @@ function App() {
         );
       }
       return [...carritoAnterior, { ...productoNuevo, cantidad: 1 }];
+    });
+
+    toast.success(mensaje, {
+      position: "bottom-right",
+      duration: 4000,
     });
   };
 
@@ -56,6 +65,7 @@ function App() {
 
   return (
     <>
+      <Toaster />
       <Navbar
         vista={vista}
         onNavigate={navegarA}

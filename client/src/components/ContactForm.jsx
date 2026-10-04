@@ -1,5 +1,5 @@
 import { useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 const CAMPOS_INICIALES = {
   nombre: "",
@@ -58,19 +58,23 @@ function ContactForm() {
     const nuevosErrores = validar(campos);
     setErrores(nuevosErrores);
     if (Object.keys(nuevosErrores).length > 0) {
-      toast.error("Por favor corregí los errores del formulario.");
+      toast.error("Por favor corregí los errores del formulario.", {
+        position: "top-center",
+        duration: 3000,
+      });
       return;
     }
     setCampos(CAMPOS_INICIALES);
     setErrores({});
     setEnviado(false);
-    toast.success("¡Mensaje enviado! Te responderemos a la brevedad.");
+    toast.success("¡Mensaje enviado! Te responderemos a la brevedad.", {
+      position: "top-center",
+			duration: 5000,
+    });
   };
 
   return (
     <section className="pagina-contacto">
-      <Toaster position="top-center" />
-
       <form className="formulario-contacto" onSubmit={handleSubmit}>
         <h2 className="contacto">Contacto</h2>
 
