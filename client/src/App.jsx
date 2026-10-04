@@ -7,6 +7,7 @@ import ProductList from "./components/catalogo/ProductList";
 
 import Carrito from "./components/Carrito";
 import { useProductos } from "./hooks/useProductos";
+import ContactForm from "./components/ContactForm";
 
 function App() {
   const [vista, setVista] = useState("inicio");
@@ -89,11 +90,7 @@ function App() {
             onNavigate={setVista}
           />
         )}
-        {vista === "contacto" && (
-          <div className="container">
-            <h1>Contacto</h1>
-          </div>
-        )}
+        {vista === "contacto" && <ContactForm />}
       </main>
 
       <Footer onNavigate={setVista} />
