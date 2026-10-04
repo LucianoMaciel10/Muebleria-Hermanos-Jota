@@ -39,14 +39,15 @@ function App() {
         (producto) => producto.id === productoNuevo.id,
       );
       if (yaExiste) {
-        mensaje = `${productoNuevo.nombre} ya estaba en el carrito, se sumó ${cantidad ? `${cantidad} unidades` : "una unidad"}`;
+        mensaje = `${productoNuevo.nombre} ya estaba en el carrito, se sumó ${cantidad > 1 ? `${cantidad} unidades` : "una unidad"}`;
         return carritoAnterior.map((producto) =>
           producto.id === productoNuevo.id
             ? {
                 ...producto,
-                cantidad: cantidad
-                  ? producto.cantidad + cantidad
-                  : producto.cantidad + 1,
+                cantidad:
+                  cantidad > 1
+                    ? producto.cantidad + cantidad
+                    : producto.cantidad + 1,
               }
             : producto,
         );
@@ -64,13 +65,26 @@ function App() {
     });
   };
 
+  // Navegación general: siempre entra a la vista "limpia" (sin filtros ni detalle)
   const navegarA = (destino) => {
-    if (destino !== "productos") {
-      setCategoria("");
-      setBusqueda("");
-      setProductoSeleccionado(null);
-    }
+    setCategoria("");
+    setBusqueda("");
+    setProductoSeleccionado(null);
     setVista(destino);
+  };
+
+  // Abre el detalle de un producto (desde Home, listado o Carrito)
+  const verDetalle = (id) => {
+    setProductoSeleccionado(id);
+    setVista("productos");
+  };
+
+  // Abre el catálogo filtrado por categoría (desde las colecciones del Home)
+  const verCategoria = (categoria) => {
+    setProductoSeleccionado(null);
+    setBusqueda("");
+    setCategoria(categoria);
+    setVista("productos");
   };
 
   return (
@@ -89,8 +103,8 @@ function App() {
             productos={productos}
             cargando={cargandoProductos}
             error={errorProductos}
-            setCategoria={setCategoria}
-            onVerDetalle={setProductoSeleccionado}
+            onVerCategoria={verCategoria}
+            onVerDetalle={verDetalle}
           />
         )}
         {vista === "productos" &&
@@ -108,7 +122,7 @@ function App() {
                   cargando={cargandoProductos}
                   error={errorProductos}
                   onAgregar={agregarAlCarrito}
-                  onVerDetalle={setProductoSeleccionado}
+                  onVerDetalle={verDetalle}
                   categoriaSeleccionada={categoriaSeleccionada}
                   setCategoria={setCategoria}
                   busqueda={busqueda}
@@ -122,7 +136,7 @@ function App() {
             carrito={carrito}
             setCarrito={setCarrito}
             onNavigate={navegarA}
-            setProductoSeleccionado={setProductoSeleccionado}
+            onVerDetalle={verDetalle}
           />
         )}
         {vista === "contacto" && <ContactForm />}

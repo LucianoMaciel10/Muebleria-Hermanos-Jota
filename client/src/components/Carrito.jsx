@@ -10,8 +10,13 @@ const formatearMoneda = (monto) =>
     maximumFractionDigits: 0,
   }).format(monto);
 
-function Carrito({ carrito, setCarrito, onNavigate, setProductoSeleccionado }) {
+function Carrito({ carrito, setCarrito, onNavigate, onVerDetalle }) {
   const [ventana, setVentana] = useState(null);
+
+  const abrirDetalle = (e, id) => {
+    e.preventDefault();
+    onVerDetalle(id);
+  };
 
   const cambiarCantidad = (id, cambio) => {
     setCarrito((carritoAnterior) =>
@@ -98,30 +103,30 @@ function Carrito({ carrito, setCarrito, onNavigate, setProductoSeleccionado }) {
                 <article key={producto.id} className="elemento-carrito">
                   <div className="elemento-carrito__imagen-contenedor">
                     {producto.imagen && (
-                      <img
-                        onClick={() => {
-                          setProductoSeleccionado(producto.id);
-                          onNavigate("productos");
-                        }}
-                        style={{ cursor: "pointer" }}
-                        src={producto.imagen}
-                        alt={producto.alt || producto.nombre}
-                        className="elemento-carrito__img"
-                      />
+                      <a
+                        href="#"
+                        className="elemento-carrito__link elemento-carrito__link--img"
+                        onClick={(e) => abrirDetalle(e, producto.id)}
+                        aria-label={`Ver detalle de ${producto.nombre}`}
+                      >
+                        <img
+                          src={producto.imagen}
+                          alt={producto.alt || producto.nombre}
+                          className="elemento-carrito__img"
+                        />
+                      </a>
                     )}
                   </div>
 
                   <div className="elemento-carrito__detalles">
                     <h3 className="elemento-carrito__titulo">
-                      <span
-                        onClick={() => {
-                          setProductoSeleccionado(producto.id);
-                          onNavigate("productos");
-                        }}
-                        style={{ cursor: "pointer" }}
+                      <a
+                        href="#"
+                        className="elemento-carrito__link"
+                        onClick={(e) => abrirDetalle(e, producto.id)}
                       >
                         {producto.nombre}
-                      </span>
+                      </a>
                     </h3>
                     <p className="elemento-carrito__precio">
                       {formatearMoneda(producto.precio)}

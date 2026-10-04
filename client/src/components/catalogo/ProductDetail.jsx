@@ -4,13 +4,16 @@ function ProductDetail({ productoId, onAgregar, onVolver }) {
   const [producto, setProducto] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
-  const [cantidad, setCantidad] = useState(1);
+  const [cantidad, setCantidad] = useState("1");
+
+  const cantidadValida = Math.max(1, parseInt(cantidad, 10) || 1);
 
   useEffect(() => {
     const abortController = new AbortController();
     async function cargarProducto() {
       setCargando(true);
       setError(null);
+      setCantidad("1");
       try {
         const base = import.meta.env.VITE_API_URL || "";
         const respuesta = await fetch(`${base}/api/productos/${productoId}`, {
@@ -46,11 +49,7 @@ function ProductDetail({ productoId, onAgregar, onVolver }) {
       <section className="product-detail">
         <div className="container">
           <p role="alert">No pudimos cargar el producto. {error}</p>
-          <button
-            type="button"
-            className="btn-vaciar"
-            onClick={onVolver}
-          >
+          <button type="button" className="btn-vaciar" onClick={onVolver}>
             ← Volver al catálogo
           </button>
         </div>
@@ -98,15 +97,22 @@ function ProductDetail({ productoId, onAgregar, onVolver }) {
                     id="product-quantity"
                     name="cantidad"
                     min="1"
+                    step="1"
+                    inputMode="numeric"
                     value={cantidad}
+                    onKeyDown={(e) => {
+                      if ([".", ",", "e", "E", "+", "-"].includes(e.key))
+                        e.preventDefault();
+                    }}
                     onChange={(e) =>
-                      setCantidad(Math.max(1, Number(e.target.value)))
+                      setCantidad(e.target.value.replace(/\D/g, ""))
                     }
+                    onBlur={() => setCantidad(String(cantidadValida))}
                   />
                   <button
                     type="button"
                     className="btn btn--primary"
-                    onClick={() => onAgregar(producto, cantidad)}
+                    onClick={() => onAgregar(producto, cantidadValida)}
                   >
                     Agregar al carrito
                   </button>

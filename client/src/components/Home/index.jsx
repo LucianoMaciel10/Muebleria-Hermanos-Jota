@@ -16,7 +16,7 @@ function Home({
   productos,
   cargando,
   error,
-  setCategoria,
+  onVerCategoria,
   onVerDetalle,
 }) {
   const destacados = IDS_DESTACADOS.map((id) =>
@@ -28,15 +28,12 @@ function Home({
       <Hero onNavigate={onNavigate} />
       <Essence />
       <Collections
-        onNavigate={onNavigate}
-        setCategoria={setCategoria}
-        onVerDetalle={onVerDetalle}
+        onVerCategoria={onVerCategoria}
       />
       <FeaturedProducts
         destacados={destacados}
         cargando={cargando}
         error={error}
-        onNavigate={onNavigate}
         onVerDetalle={onVerDetalle}
       />
       <Commitment />

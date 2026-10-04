@@ -25,13 +25,7 @@ const COLECCIONES = [
   },
 ];
 
-function Collections({ onNavigate, setCategoria, onVerDetalle }) {
-  const ir = (e, categoria) => {
-    e.preventDefault();
-    setCategoria(categoria);
-    onNavigate("productos");
-  };
-
+function Collections({ onVerCategoria }) {
   return (
     <section className="collections">
       <div className="container">
@@ -43,8 +37,8 @@ function Collections({ onNavigate, setCategoria, onVerDetalle }) {
               href="#"
               className="collection-card"
               onClick={(e) => {
-                onVerDetalle(null);
-                ir(e, coleccion.categoria);
+                e.preventDefault();
+                onVerCategoria(coleccion.categoria);
               }}
             >
               <img src={coleccion.imagen} alt={coleccion.alt} />

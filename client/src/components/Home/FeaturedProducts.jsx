@@ -1,4 +1,4 @@
-function FeaturedProducts({ destacados, cargando, error, onNavigate, onVerDetalle }) {
+function FeaturedProducts({ destacados, cargando, error, onVerDetalle }) {
   return (
     <section className="featured">
       <div className="container">
@@ -14,27 +14,28 @@ function FeaturedProducts({ destacados, cargando, error, onNavigate, onVerDetall
         {!cargando && !error && (
           <div className="featured__grid">
             {destacados.map((producto) => (
-              <article
-                key={producto.id}
-                className="product-card"
-                onClick={() => {
-                  onVerDetalle(producto.id) 
-                  onNavigate("productos")
-                }}
-                style={{ cursor: "pointer" }}
-              >
-                <div className="product-card__media">
-                  <img
-                    src={producto.imagen}
-                    alt={producto.alt}
-                    loading="lazy"
-                  />
-                </div>
-                <div className="product-card__body">
-                  <h3 className="product-card__title">{producto.nombre}</h3>
-                  <p className="product-card__desc">{producto.descripcion}</p>
-                  <span className="product-card__cta">Ver detalle →</span>
-                </div>
+              <article key={producto.id} className="product-card">
+                <a
+                  href="#"
+                  className="product-card__link"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onVerDetalle(producto.id);
+                  }}
+                >
+                  <div className="product-card__media">
+                    <img
+                      src={producto.imagen}
+                      alt={producto.alt}
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="product-card__body">
+                    <h3 className="product-card__title">{producto.nombre}</h3>
+                    <p className="product-card__desc">{producto.descripcion}</p>
+                    <span className="product-card__cta">Ver detalle →</span>
+                  </div>
+                </a>
               </article>
             ))}
           </div>
