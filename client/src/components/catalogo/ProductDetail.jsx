@@ -119,6 +119,21 @@ function ProductDetail({ productoId, onAgregar, onVolver }) {
                 </div>
               </div>
             )}
+            
+            {producto.caracteristicas &&
+              producto.caracteristicas.length > 0 && (
+                <section
+                  className="product-detail__features"
+                  aria-labelledby="product-features-title"
+                >
+                  <h2 id="product-features-title">Características</h2>
+                  <ul>
+                    {producto.caracteristicas.map((caracteristica, index) => (
+                      <li key={index}>{caracteristica}</li>
+                    ))}
+                  </ul>
+                </section>
+              )}
           </div>
         </div>
       </div>
