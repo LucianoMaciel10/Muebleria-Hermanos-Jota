@@ -3,6 +3,7 @@ const cors = require("cors");
 const logger = require("./src/middleware/loggs");
 const productosRoutes = require("./src/routes/productos.routes");
 const { RutaNoEncontrada, ManejadorErrores } = require("./src/middleware/error404");
+const conectarDB = require("./src/config/db");
 
 
 const app = express();
@@ -18,6 +19,9 @@ app.use("/api/productos", productosRoutes);
 app.use(RutaNoEncontrada);
 app.use(ManejadorErrores);
 
-app.listen(PORT, () => {
-  console.log(`Servidor escuchando en http://localhost:${PORT}`);
+
+conectarDB().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Servidor escuchando en el puerto ${PORT}`);
+  });
 });
