@@ -7,9 +7,9 @@ const productoSchema = new mongoose.Schema(
         precio: { type: Number, required: [true, "el precio es obligatorio"], min: [0, "el precio no puede ser negativo"] },
         stock: { type: Number,default: 0, min: [0, "el stock no puede ser negativo"] },
         imagenUrl: { type: String, default: "", trim: true },
-        categoria: { type: String, required: [true, "la categoría es obligatoria"] },
+        categoria: { type: String, required: [true, "la categoría es obligatoria"], trim: true },
         alt: { type: String, default: "", trim: true },
-        caracteristicas: { type: [String], default: [], trim: true },
+        caracteristicas: { type: [{ type : String , trim : true}], default: [] },
     },
     { timestamps: true }
 );
