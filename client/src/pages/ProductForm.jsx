@@ -16,6 +16,7 @@ const CAMPOS_INICIALES = {
 };
 
 const esUrlValida = (valor) => {
+  if (valor.startsWith("/")) return true; // rutas locales de los productos del seed
   try {
     const url = new URL(valor);
     return url.protocol === "http:" || url.protocol === "https:";
