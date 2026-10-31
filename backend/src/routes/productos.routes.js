@@ -9,7 +9,6 @@ function TextoNormal(texto) {
     .replace(/[\u0300-\u036f]/g, "");
 }
 
-
 // GET /api/productos?categoria=
 router.get("/", async (req, res) => {
   const { categoria, busqueda } = req.query;
@@ -29,15 +28,12 @@ router.get("/", async (req, res) => {
     productos = productos.filter(
       (p) =>
         TextoNormal(p.nombre).includes(termino) ||
-        TextoNormal(p.descripcion).includes(termino)
+        TextoNormal(p.descripcion).includes(termino),
     );
   }
 
   res.json(productos);
 });
-
-
-
 
 router.get("/:id", async (req, res, next) => {
   const producto = await Producto.findById(req.params.id);
@@ -51,19 +47,16 @@ router.get("/:id", async (req, res, next) => {
   res.json(producto);
 });
 
-
 router.post("/", async (req, res, next) => {
   const nuevoProducto = await Producto.create(req.body);
   res.status(201).json(nuevoProducto);
 });
 
-
-
 router.put("/:id", async (req, res, next) => {
   const productoActualizado = await Producto.findByIdAndUpdate(
     req.params.id,
     req.body,
-    { new: true, runValidators: true }
+    { returnDocument: "after", runValidators: true },
   );
   if (!productoActualizado) {
     const error = new Error(`Producto con id "${req.params.id}" no encontrado`);
@@ -73,7 +66,6 @@ router.put("/:id", async (req, res, next) => {
   res.json(productoActualizado);
 });
 
-
 router.delete("/:id", async (req, res, next) => {
   const productoEliminado = await Producto.findByIdAndDelete(req.params.id);
 
@@ -82,6 +74,6 @@ router.delete("/:id", async (req, res, next) => {
     error.status = 404;
     return next(error);
   }
-  res.json({ mensaje : "Producto eliminado correctamente" });
+  res.json({ mensaje: "Producto eliminado correctamente" });
 });
 module.exports = router;
