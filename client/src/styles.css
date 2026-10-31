@@ -2104,3 +2104,14 @@ button {
     animation: none;
   }
 }
+
+.catalog__empty h2 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+.catalog__empty p {
+  margin-bottom: 1.5rem;
+}
+.catalog__empty p:last-child {
+  margin-bottom: 0;
+}

@@ -31,7 +31,34 @@ function Catalogo({
             </p>
           )}
           {!cargando && !error && productos.length === 0 && (
-            <p role="status">No se encontraron productos.</p>
+            <div className="catalog__empty" role="status">
+              {busqueda || categoriaSeleccionada ? (
+                <>
+                  <h2>No encontramos productos</h2>
+                  <p>
+                    {busqueda
+                      ? `No hay resultados para «${busqueda}»${categoriaSeleccionada ? " en esta categoría" : ""}.`
+                      : "No hay productos en esta categoría."}{" "}
+                    Probá con otra búsqueda o categoría.
+                  </p>
+                  <button
+                    type="button"
+                    className="btn btn--primary"
+                    onClick={() => {
+                      setCategoria("");
+                      setBusqueda("");
+                    }}
+                  >
+                    Limpiar filtros
+                  </button>
+                </>
+              ) : (
+                <>
+                  <h2>Todavía no hay productos</h2>
+                  <p>Creá el primero con el botón «Crear producto».</p>
+                </>
+              )}
+            </div>
           )}
           {!cargando && !error && productos.length > 0 && (
             <ul
