@@ -1033,6 +1033,7 @@ button {
 }
 
 .product-detail .btn-vaciar {
+  display: inline-block;
   margin-bottom: 1.5rem;
   width: auto;
   padding: 0.6rem 1.25rem;

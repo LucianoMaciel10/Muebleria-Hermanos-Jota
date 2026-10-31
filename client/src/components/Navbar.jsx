@@ -1,26 +1,26 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 function Navbar({ vista, onNavigate, cantidadCarrito }) {
   const [menuAbierto, setMenuAbierto] = useState(false);
 
-  const ir = (e, destino) => {
-    e.preventDefault();
-    onNavigate(destino);
+  const ir = () => {
+    onNavigate();
     setMenuAbierto(false);
   };
 
   return (
     <header className="site-header">
       <div className="container header__inner">
-        <a
-          href="#"
+        <Link
+          to="/"
           className="logo"
-          onClick={(e) => ir(e, "inicio")}
+          onClick={ir}
           aria-label="Hermanos Jota, ir al inicio"
         >
           <img src="/assets/images/logo.svg" alt="" className="logo__img" />
           <span className="logo__text">Hermanos Jota</span>
-        </a>
+        </Link>
 
         <button
           type="button"
@@ -40,39 +40,39 @@ function Navbar({ vista, onNavigate, cantidadCarrito }) {
         >
           <ul className="main-nav__list">
             <li>
-              <a
-                href="#"
-                onClick={(e) => ir(e, "inicio")}
+              <Link
+                to="/"
+                onClick={ir}
                 aria-current={vista === "inicio" ? "page" : undefined}
               >
                 Inicio
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#"
-                onClick={(e) => ir(e, "productos")}
+              <Link
+                to="/productos"
+                onClick={ir}
                 aria-current={vista === "productos" ? "page" : undefined}
               >
                 Productos
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#"
-                onClick={(e) => ir(e, "contacto")}
+              <Link
+                to="/contacto"
+                onClick={ir}
                 aria-current={vista === "contacto" ? "page" : undefined}
               >
                 Contacto
-              </a>
+              </Link>
             </li>
           </ul>
         </nav>
 
-        <a
-          href="#"
+        <Link
+          to="/carrito"
           className="cart-link"
-          onClick={(e) => ir(e, "carrito")}
+          onClick={ir}
           aria-label="Ver carrito de compras"
         >
           <svg
@@ -92,7 +92,7 @@ function Navbar({ vista, onNavigate, cantidadCarrito }) {
             <circle cx="17.5" cy="19.5" r="1.4" fill="currentColor" />
           </svg>
           {<span className="cart-link__count">{cantidadCarrito}</span>}
-        </a>
+        </Link>
       </div>
     </header>
   );

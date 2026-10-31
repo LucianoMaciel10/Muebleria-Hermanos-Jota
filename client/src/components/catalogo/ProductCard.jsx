@@ -1,9 +1,6 @@
-function ProductCard({ producto, onAgregar, onVerDetalle }) {
-  const handlerVerDetalle = (event) => {
-    event.preventDefault();
-    onVerDetalle(producto.id);
-  };
+import { Link } from "react-router-dom";
 
+function ProductCard({ producto, onAgregar }) {
   return (
     <li>
       <article className="product-card">
@@ -11,26 +8,24 @@ function ProductCard({ producto, onAgregar, onVerDetalle }) {
           {!producto.stock && (
             <span className="product-card__badge">Sin stock</span>
           )}
-          <a
-            href="#"
+          <Link
+            to={`/productos/${producto._id}`}
             className="product-card__link"
-            onClick={handlerVerDetalle}
             aria-label={`Ver detalle de ${producto.nombre}`}
           >
-            <img src={producto.imagen} alt={producto.alt} loading="lazy" />
-          </a>
+            <img src={producto.imagenUrl} alt={producto.alt} loading="lazy" />
+          </Link>
         </div>
 
         <div className="product-card__body">
           <h3 className="product-card__title">
-            <a
-              href="#"
+            <Link
+              to={`/productos/${producto._id}`}
               className="product-card__link"
-              onClick={handlerVerDetalle}
               aria-label={`Ver detalle de ${producto.nombre}`}
             >
               {producto.nombre}
-            </a>
+            </Link>
           </h3>
           <p className="product-card__desc">{producto.descripcion}</p>
 

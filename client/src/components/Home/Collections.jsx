@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const COLECCIONES = [
   {
     categoria: "asientos",
@@ -32,18 +34,15 @@ function Collections({ onVerCategoria }) {
         <h2 className="section-title">Nuestras Colecciones</h2>
         <div className="collections__grid">
           {COLECCIONES.map((coleccion) => (
-            <a
+            <Link
               key={coleccion.categoria}
-              href="#"
+              to="/productos"
               className="collection-card"
-              onClick={(e) => {
-                e.preventDefault();
-                onVerCategoria(coleccion.categoria);
-              }}
+              onClick={() => onVerCategoria(coleccion.categoria)}
             >
               <img src={coleccion.imagen} alt={coleccion.alt} />
               <span className="collection-card__label">{coleccion.label}</span>
-            </a>
+            </Link>
           ))}
         </div>
       </div>

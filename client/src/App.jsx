@@ -1,23 +1,28 @@
 import { useState, useEffect } from "react";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import Home from "./components/Home";
-import ProductList from "./components/catalogo/ProductList";
+import Home from "./pages/Inicio";
+import Catalogo from "./pages/Catalogo";
 import toast, { Toaster } from "react-hot-toast";
-import ProductDetail from "./components/catalogo/ProductDetail";
+import ProductDetail from "./pages/ProductDetail";
 
-import Carrito from "./components/Carrito";
+import Carrito from "./pages/Carrito";
 import { useProductos } from "./hooks/useProductos";
-import ContactForm from "./components/ContactForm";
+import ContactForm from "./pages/ContactForm";
 
 function App() {
-  const [vista, setVista] = useState("inicio");
   const [carrito, setCarrito] = useState(
     () => JSON.parse(localStorage.getItem("carrito")) || [],
   );
-  const [productoSeleccionado, setProductoSeleccionado] = useState(null);
   const [categoriaSeleccionada, setCategoria] = useState("");
   const [busqueda, setBusqueda] = useState("");
+  const location = useLocation();
+  const vista = location.pathname.startsWith("/productos/")
+    ? "productos"
+    : location.pathname === "/"
+      ? "inicio"
+      : location.pathname.slice(1);
   const {
     productos,
     cargando: cargandoProductos,
@@ -36,12 +41,12 @@ function App() {
 
     setCarrito((carritoAnterior) => {
       const yaExiste = carritoAnterior.find(
-        (producto) => producto.id === productoNuevo.id,
+        (producto) => producto._id === productoNuevo._id,
       );
       if (yaExiste) {
         mensaje = `${productoNuevo.nombre} ya estaba en el carrito, se sumó ${cantidad > 1 ? `${cantidad} unidades` : "una unidad"}`;
         return carritoAnterior.map((producto) =>
-          producto.id === productoNuevo.id
+          producto._id === productoNuevo._id
             ? {
                 ...producto,
                 cantidad:
@@ -65,26 +70,14 @@ function App() {
     });
   };
 
-  // Navegación general: siempre entra a la vista "limpia" (sin filtros ni detalle)
-  const navegarA = (destino) => {
+  const limpiarFiltros = () => {
     setCategoria("");
     setBusqueda("");
-    setProductoSeleccionado(null);
-    setVista(destino);
   };
 
-  // Abre el detalle de un producto (desde Home, listado o Carrito)
-  const verDetalle = (id) => {
-    setProductoSeleccionado(id);
-    setVista("productos");
-  };
-
-  // Abre el catálogo filtrado por categoría (desde las colecciones del Home)
-  const verCategoria = (categoria) => {
-    setProductoSeleccionado(null);
+  const seleccionarCategoria = (categoria) => {
     setBusqueda("");
     setCategoria(categoria);
-    setVista("productos");
   };
 
   return (
@@ -92,57 +85,67 @@ function App() {
       <Toaster />
       <Navbar
         vista={vista}
-        onNavigate={navegarA}
+        onNavigate={limpiarFiltros}
         cantidadCarrito={cantidadCarrito}
       />
 
       <main id="main">
-        {vista === "inicio" && (
-          <Home
-            onNavigate={navegarA}
-            productos={productos}
-            cargando={cargandoProductos}
-            error={errorProductos}
-            onVerCategoria={verCategoria}
-            onVerDetalle={verDetalle}
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Home
+                onNavigate={limpiarFiltros}
+                productos={productos}
+                cargando={cargandoProductos}
+                error={errorProductos}
+                onVerCategoria={seleccionarCategoria}
+              />
+            }
           />
-        )}
-        {vista === "productos" &&
-          (productoSeleccionado ? (
-            <ProductDetail
-              productoId={productoSeleccionado}
-              onAgregar={agregarAlCarrito}
-              onVolver={() => setProductoSeleccionado(null)}
-            />
-          ) : (
-            <section className="catalog" aria-labelledby="catalog-title">
-              <div className="container">
-                <ProductList
-                  productos={productos}
-                  cargando={cargandoProductos}
-                  error={errorProductos}
-                  onAgregar={agregarAlCarrito}
-                  onVerDetalle={verDetalle}
-                  categoriaSeleccionada={categoriaSeleccionada}
-                  setCategoria={setCategoria}
-                  busqueda={busqueda}
-                  setBusqueda={setBusqueda}
-                />
-              </div>
-            </section>
-          ))}
-        {vista === "carrito" && (
-          <Carrito
-            carrito={carrito}
-            setCarrito={setCarrito}
-            onNavigate={navegarA}
-            onVerDetalle={verDetalle}
+          <Route
+            path="/productos"
+            element={
+              <Catalogo
+                productos={productos}
+                cargando={cargandoProductos}
+                error={errorProductos}
+                onAgregar={agregarAlCarrito}
+                categoriaSeleccionada={categoriaSeleccionada}
+                setCategoria={setCategoria}
+                busqueda={busqueda}
+                setBusqueda={setBusqueda}
+              />
+            }
           />
-        )}
-        {vista === "contacto" && <ContactForm />}
+          <Route
+            path="/productos/:id"
+            element={
+              <ProductDetail
+                onAgregar={agregarAlCarrito}
+              />
+            }
+          />
+          <Route path="/contacto" element={<ContactForm />} />
+          <Route
+            path="/carrito"
+            element={
+              <Carrito
+                carrito={carrito}
+                setCarrito={setCarrito}
+                onNavigate={limpiarFiltros}
+              />
+            }
+          />
+
+          {/* Acá van las rutas /admin/crear-producto y /admin/editar-producto
+            cuando estén los formularios */}
+
+          <Route path="*" element={<p>Esta página no existe</p>} />
+        </Routes>
       </main>
 
-      <Footer onNavigate={navegarA} />
+      <Footer onNavigate={limpiarFiltros} />
     </>
   );
 }
