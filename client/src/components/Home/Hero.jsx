@@ -1,9 +1,6 @@
-function Hero({ onNavigate }) {
-  const ir = (e, destino) => {
-    e.preventDefault();
-    onNavigate(destino);
-  };
+import { Link } from "react-router-dom";
 
+function Hero({ onNavigate }) {
   return (
     <section className="hero">
       <div className="container hero__inner">
@@ -13,13 +10,13 @@ function Hero({ onNavigate }) {
             Mobiliario artesanal argentino. Diseño atemporal, materiales
             sustentables, piezas que cuentan historias.
           </p>
-          <a
-            href="#"
+          <Link
+            to="/productos"
             className="btn btn--primary"
-            onClick={(e) => ir(e, "productos")}
+            onClick={onNavigate}
           >
             Ver Catálogo
-          </a>
+          </Link>
         </div>
         <div className="hero__media">
           <img

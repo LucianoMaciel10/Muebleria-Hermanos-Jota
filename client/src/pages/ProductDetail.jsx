@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
 
-function ProductDetail({ productoId, onAgregar, onVolver }) {
+function ProductDetail({ onAgregar }) {
+  const { id } = useParams();
   const [producto, setProducto] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
@@ -16,7 +18,7 @@ function ProductDetail({ productoId, onAgregar, onVolver }) {
       setCantidad("1");
       try {
         const base = import.meta.env.VITE_API_URL || "";
-        const respuesta = await fetch(`${base}/api/productos/${productoId}`, {
+        const respuesta = await fetch(`${base}/api/productos/${id}`, {
           signal: abortController.signal,
         });
         if (!respuesta.ok) {
@@ -32,7 +34,7 @@ function ProductDetail({ productoId, onAgregar, onVolver }) {
     }
     cargarProducto();
     return () => abortController.abort();
-  }, [productoId]);
+  }, [id]);
 
   if (cargando) {
     return (
@@ -49,9 +51,9 @@ function ProductDetail({ productoId, onAgregar, onVolver }) {
       <section className="product-detail">
         <div className="container">
           <p role="alert">No pudimos cargar el producto. {error}</p>
-          <button type="button" className="btn-vaciar" onClick={onVolver}>
+          <Link to="/productos" className="btn-vaciar">
             ← Volver al catálogo
-          </button>
+          </Link>
         </div>
       </section>
     );
@@ -60,14 +62,14 @@ function ProductDetail({ productoId, onAgregar, onVolver }) {
   return (
     <section className="product-detail" aria-labelledby="product-detail-title">
       <div className="container">
-        <button type="button" className="btn-vaciar" onClick={onVolver}>
+        <Link to="/productos" className="btn-vaciar">
           ← Volver al catálogo
-        </button>
+        </Link>
 
         <div className="product-detail__content">
           <div className="product-detail__media">
             <img
-              src={producto.imagen}
+              src={producto.imagenUrl}
               alt={producto.alt}
               className="product-detail__image"
             />

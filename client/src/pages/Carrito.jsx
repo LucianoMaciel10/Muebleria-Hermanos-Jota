@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const TASA_IVA = 0.21;
 
@@ -10,27 +11,22 @@ const formatearMoneda = (monto) =>
     maximumFractionDigits: 0,
   }).format(monto);
 
-function Carrito({ carrito, setCarrito, onNavigate, onVerDetalle }) {
+function Carrito({ carrito, setCarrito, onNavigate }) {
   const [ventana, setVentana] = useState(null);
 
-  const abrirDetalle = (e, id) => {
-    e.preventDefault();
-    onVerDetalle(id);
-  };
-
-  const cambiarCantidad = (id, cambio) => {
+  const cambiarCantidad = (_id, cambio) => {
     setCarrito((carritoAnterior) =>
       carritoAnterior.map((producto) =>
-        producto.id === id && producto.cantidad + cambio > 0
+        producto._id === _id && producto.cantidad + cambio > 0
           ? { ...producto, cantidad: producto.cantidad + cambio }
           : producto,
       ),
     );
   };
 
-  const eliminarProducto = (id) => {
+  const eliminarProducto = (_id) => {
     setCarrito((carritoAnterior) =>
-      carritoAnterior.filter((producto) => producto.id !== id),
+      carritoAnterior.filter((producto) => producto._id !== _id),
     );
   };
 
@@ -86,13 +82,13 @@ function Carrito({ carrito, setCarrito, onNavigate, onVerDetalle }) {
         {carrito.length === 0 && (
           <div className="mensaje-carrito-vacio">
             <h2>Tu carrito está vacío</h2>
-            <button
-              type="button"
+            <Link
+              to="/productos"
               className="btn-catalogo"
-              onClick={() => onNavigate("productos")}
+              onClick={onNavigate}
             >
               Ver el catálogo
-            </button>
+            </Link>
           </div>
         )}
 
@@ -100,33 +96,31 @@ function Carrito({ carrito, setCarrito, onNavigate, onVerDetalle }) {
           <div className="layout-carrito">
             <div className="lista-elementos-carrito">
               {carrito.map((producto) => (
-                <article key={producto.id} className="elemento-carrito">
+                <article key={producto._id} className="elemento-carrito">
                   <div className="elemento-carrito__imagen-contenedor">
-                    {producto.imagen && (
-                      <a
-                        href="#"
+                    {producto.imagenUrl && (
+                      <Link
+                        to={`/productos/${producto._id}`}
                         className="elemento-carrito__link elemento-carrito__link--img"
-                        onClick={(e) => abrirDetalle(e, producto.id)}
                         aria-label={`Ver detalle de ${producto.nombre}`}
                       >
                         <img
-                          src={producto.imagen}
+                          src={producto.imagenUrl}
                           alt={producto.alt || producto.nombre}
                           className="elemento-carrito__img"
                         />
-                      </a>
+                      </Link>
                     )}
                   </div>
 
                   <div className="elemento-carrito__detalles">
                     <h3 className="elemento-carrito__titulo">
-                      <a
-                        href="#"
+                      <Link
+                        to={`/productos/${producto._id}`}
                         className="elemento-carrito__link"
-                        onClick={(e) => abrirDetalle(e, producto.id)}
                       >
                         {producto.nombre}
-                      </a>
+                      </Link>
                     </h3>
                     <p className="elemento-carrito__precio">
                       {formatearMoneda(producto.precio)}
@@ -138,7 +132,7 @@ function Carrito({ carrito, setCarrito, onNavigate, onVerDetalle }) {
                       <button
                         type="button"
                         className="btn-cantidad"
-                        onClick={() => cambiarCantidad(producto.id, -1)}
+                        onClick={() => cambiarCantidad(producto._id, -1)}
                         aria-label={`Restar uno a ${producto.nombre}`}
                       >
                         -
@@ -149,7 +143,7 @@ function Carrito({ carrito, setCarrito, onNavigate, onVerDetalle }) {
                       <button
                         type="button"
                         className="btn-cantidad"
-                        onClick={() => cambiarCantidad(producto.id, 1)}
+                        onClick={() => cambiarCantidad(producto._id, 1)}
                         aria-label={`Sumar uno a ${producto.nombre}`}
                       >
                         +
@@ -161,7 +155,7 @@ function Carrito({ carrito, setCarrito, onNavigate, onVerDetalle }) {
                     <button
                       type="button"
                       className="btn-eliminar"
-                      onClick={() => eliminarProducto(producto.id)}
+                      onClick={() => eliminarProducto(producto._id)}
                       aria-label={`Eliminar ${producto.nombre}`}
                     >
                       &times;
