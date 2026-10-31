@@ -1,4 +1,6 @@
-function FeaturedProducts({ destacados, cargando, error, onVerDetalle }) {
+import { Link } from "react-router-dom";
+
+function FeaturedProducts({ destacados, cargando, error }) {
   return (
     <section className="featured">
       <div className="container">
@@ -14,18 +16,14 @@ function FeaturedProducts({ destacados, cargando, error, onVerDetalle }) {
         {!cargando && !error && (
           <div className="featured__grid">
             {destacados.map((producto) => (
-              <article key={producto.id} className="product-card">
-                <a
-                  href="#"
+              <article key={producto._id} className="product-card">
+                <Link
+                  to={`/productos/${producto._id}`}
                   className="product-card__link"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onVerDetalle(producto.id);
-                  }}
                 >
                   <div className="product-card__media">
                     <img
-                      src={producto.imagen}
+                      src={producto.imagenUrl}
                       alt={producto.alt}
                       loading="lazy"
                     />
@@ -35,7 +33,7 @@ function FeaturedProducts({ destacados, cargando, error, onVerDetalle }) {
                     <p className="product-card__desc">{producto.descripcion}</p>
                     <span className="product-card__cta">Ver detalle →</span>
                   </div>
-                </a>
+                </Link>
               </article>
             ))}
           </div>

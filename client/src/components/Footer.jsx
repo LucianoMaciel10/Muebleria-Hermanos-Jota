@@ -1,9 +1,6 @@
-function Footer({ onNavigate }) {
-  const ir = (e, destino) => {
-    e.preventDefault();
-    onNavigate(destino);
-  };
+import { Link } from "react-router-dom";
 
+function Footer({ onNavigate }) {
   return (
     <footer className="site-footer">
       <div className="container footer__grid">
@@ -22,19 +19,19 @@ function Footer({ onNavigate }) {
           <h3>Navegación</h3>
           <ul>
             <li>
-              <a href="#" onClick={(e) => ir(e, "inicio")}>
+              <Link to="/" onClick={onNavigate}>
                 Inicio
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="#" onClick={(e) => ir(e, "productos")}>
+              <Link to="/productos" onClick={onNavigate}>
                 Productos
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="#" onClick={(e) => ir(e, "contacto")}>
+              <Link to="/contacto" onClick={onNavigate}>
                 Contacto
-              </a>
+              </Link>
             </li>
           </ul>
         </nav>
