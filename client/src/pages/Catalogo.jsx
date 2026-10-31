@@ -2,6 +2,7 @@ import ProductCard from "../components/catalogo/ProductCard";
 import HeaderCatalog from "../components/catalogo/HeaderCatalog";
 
 function Catalogo({
+  carrito,
   categoriaSeleccionada,
   setCategoria,
   busqueda,
@@ -43,6 +44,10 @@ function Catalogo({
                 <ProductCard
                   key={producto._id}
                   producto={producto}
+                  cantidadEnCarrito={
+                    carrito.find((item) => item._id === producto._id)
+                      ?.cantidad || 0
+                  }
                   onAgregar={() => onAgregar(producto)}
                 />
               ))}

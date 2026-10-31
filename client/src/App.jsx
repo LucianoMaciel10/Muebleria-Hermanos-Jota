@@ -38,24 +38,32 @@ function App() {
 
   const cantidadCarrito = carrito.reduce((acc, item) => acc + item.cantidad, 0);
 
-  // Agrega el productoo ,suma 1 si ya estaba en el carrito
+  // Agrega el producto, suma si ya estaba en el carrito sin superar el stock
   const agregarAlCarrito = (productoNuevo, cantidad = null) => {
-    let mensaje = `${productoNuevo.nombre} agregado al carrito`;
+    const cantidadAgregar = cantidad || 1;
+    const enCarrito =
+      carrito.find((producto) => producto._id === productoNuevo._id)
+        ?.cantidad || 0;
+    const disponibles = productoNuevo.stock - enCarrito;
+
+    if (cantidadAgregar > disponibles) return;
+
+    const mensaje =
+      enCarrito > 0
+        ? `${productoNuevo.nombre} ya estaba en el carrito, se sumó ${cantidadAgregar > 1 ? `${cantidadAgregar} unidades` : "una unidad"}`
+        : `${productoNuevo.nombre} agregado al carrito`;
 
     setCarrito((carritoAnterior) => {
       const yaExiste = carritoAnterior.find(
         (producto) => producto._id === productoNuevo._id,
       );
       if (yaExiste) {
-        mensaje = `${productoNuevo.nombre} ya estaba en el carrito, se sumó ${cantidad > 1 ? `${cantidad} unidades` : "una unidad"}`;
         return carritoAnterior.map((producto) =>
           producto._id === productoNuevo._id
             ? {
                 ...producto,
-                cantidad:
-                  cantidad > 1
-                    ? producto.cantidad + cantidad
-                    : producto.cantidad + 1,
+                stock: productoNuevo.stock,
+                cantidad: producto.cantidad + cantidadAgregar,
               }
             : producto,
         );
@@ -63,7 +71,7 @@ function App() {
 
       return [
         ...carritoAnterior,
-        { ...productoNuevo, cantidad: cantidad ? cantidad : 1 },
+        { ...productoNuevo, cantidad: cantidadAgregar },
       ];
     });
 
@@ -110,6 +118,7 @@ function App() {
             path="/productos"
             element={
               <Catalogo
+                carrito={carrito}
                 productos={productos}
                 cargando={cargandoProductos}
                 error={errorProductos}
@@ -125,6 +134,7 @@ function App() {
             path="/productos/:id"
             element={
               <ProductDetail
+                carrito={carrito}
                 onAgregar={agregarAlCarrito}
                 onProductoModificado={recargarProductos}
               />

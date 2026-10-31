@@ -82,11 +82,7 @@ function Carrito({ carrito, setCarrito, onNavigate }) {
         {carrito.length === 0 && (
           <div className="mensaje-carrito-vacio">
             <h2>Tu carrito está vacío</h2>
-            <Link
-              to="/productos"
-              className="btn-catalogo"
-              onClick={onNavigate}
-            >
+            <Link to="/productos" className="btn-catalogo" onClick={onNavigate}>
               Ver el catálogo
             </Link>
           </div>
@@ -144,6 +140,7 @@ function Carrito({ carrito, setCarrito, onNavigate }) {
                         type="button"
                         className="btn-cantidad"
                         onClick={() => cambiarCantidad(producto._id, 1)}
+                        disabled={producto.cantidad >= producto.stock}
                         aria-label={`Sumar uno a ${producto.nombre}`}
                       >
                         +

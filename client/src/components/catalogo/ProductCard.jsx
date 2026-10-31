@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
 
-function ProductCard({ producto, onAgregar }) {
+function ProductCard({ producto, onAgregar, cantidadEnCarrito = 0 }) {
+  const sinStock = producto.stock - cantidadEnCarrito <= 0;
+
   return (
     <li>
       <article className="product-card">
         <div className="product-card__media">
-          {!producto.stock && (
-            <span className="product-card__badge">Sin stock</span>
-          )}
+          {sinStock && <span className="product-card__badge">Sin stock</span>}
           <Link
             to={`/productos/${producto._id}`}
             className="product-card__link"
@@ -37,9 +37,9 @@ function ProductCard({ producto, onAgregar }) {
               type="button"
               className="product-card__btn"
               onClick={onAgregar}
-              disabled={!producto.stock}
+              disabled={sinStock}
             >
-              {producto.stock ? "Agregar al carrito" : "Sin stock"}
+              {sinStock ? "Sin stock" : "Agregar al carrito"}
             </button>
           </div>
         </div>

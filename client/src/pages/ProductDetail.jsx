@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 
 const base = import.meta.env.VITE_API_URL || "";
 
-function ProductDetail({ onAgregar, onProductoModificado }) {
+function ProductDetail({ carrito, onAgregar, onProductoModificado }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const [producto, setProducto] = useState(null);
@@ -14,7 +14,12 @@ function ProductDetail({ onAgregar, onProductoModificado }) {
   const [confirmandoEliminar, setConfirmandoEliminar] = useState(false);
   const [eliminando, setEliminando] = useState(false);
 
-  const cantidadValida = Math.max(1, parseInt(cantidad, 10) || 1);
+  const enCarrito = carrito.find((item) => item._id === id)?.cantidad || 0;
+  const disponibles = producto ? producto.stock - enCarrito : 0;
+  const cantidadValida = Math.min(
+    Math.max(1, parseInt(cantidad, 10) || 1),
+    Math.max(disponibles, 1),
+  );
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -121,37 +126,50 @@ function ProductDetail({ onAgregar, onProductoModificado }) {
               {producto.stock ? "En stock" : "Sin stock"}
             </p>
 
-            {producto.stock > 0 && (
-              <div className="product-detail__purchase">
-                <label htmlFor="product-quantity">Cantidad</label>
-                <div className="product-detail__purchase-controls">
-                  <input
-                    type="number"
-                    id="product-quantity"
-                    name="cantidad"
-                    min="1"
-                    step="1"
-                    inputMode="numeric"
-                    value={cantidad}
-                    onKeyDown={(e) => {
-                      if ([".", ",", "e", "E", "+", "-"].includes(e.key))
-                        e.preventDefault();
-                    }}
-                    onChange={(e) =>
-                      setCantidad(e.target.value.replace(/\D/g, ""))
-                    }
-                    onBlur={() => setCantidad(String(cantidadValida))}
-                  />
-                  <button
-                    type="button"
-                    className="btn btn--primary"
-                    onClick={() => onAgregar(producto, cantidadValida)}
-                  >
-                    Agregar al carrito
-                  </button>
-                </div>
+            <div className="product-detail__purchase">
+              <label htmlFor="product-quantity">Cantidad</label>
+              <div className="product-detail__purchase-controls">
+                <input
+                  type="number"
+                  id="product-quantity"
+                  name="cantidad"
+                  min="1"
+                  max={disponibles}
+                  step="1"
+                  inputMode="numeric"
+                  disabled={disponibles <= 0}
+                  value={cantidad}
+                  onKeyDown={(e) => {
+                    if ([".", ",", "e", "E", "+", "-"].includes(e.key))
+                      e.preventDefault();
+                  }}
+                  onChange={(e) => {
+                    const soloDigitos = e.target.value.replace(/\D/g, "");
+                    setCantidad(
+                      soloDigitos !== "" && Number(soloDigitos) > disponibles
+                        ? String(disponibles)
+                        : soloDigitos,
+                    );
+                  }}
+                  onBlur={() => setCantidad(String(cantidadValida))}
+                />
+                <button
+                  type="button"
+                  className="btn btn--primary"
+                  disabled={disponibles <= 0}
+                  onClick={() => {
+                    onAgregar(producto, cantidadValida);
+                    setCantidad("1");
+                  }}
+                >
+                  {disponibles > 0
+                    ? "Agregar al carrito"
+                    : producto.stock > 0
+                      ? "Sin más stock"
+                      : "Sin stock"}
+                </button>
               </div>
-            )}
+            </div>
 
             {producto.caracteristicas &&
               producto.caracteristicas.length > 0 && (

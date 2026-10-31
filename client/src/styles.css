@@ -1989,3 +1989,13 @@ button {
     padding-inline: 0.6rem;
   }
 }
+
+.btn-cantidad:disabled {
+  border-color: #b8b0a8;
+  color: #b8b0a8;
+  cursor: not-allowed;
+}
+.btn-cantidad:disabled:hover {
+  background-color: var(--color-white);
+  color: #b8b0a8;
+}
