@@ -1,13 +1,12 @@
 import { Link } from "react-router-dom";
+import { SkeletonDestacados } from "../Skeletons";
 
 function FeaturedProducts({ destacados, cargando, error }) {
   return (
     <section className="featured">
       <div className="container">
         <h2 className="section-title">Productos Destacados</h2>
-        {cargando && (
-          <p className="mensaje-carrito-cargando">Cargando productos...</p>
-        )}
+        {cargando && <SkeletonDestacados />}
         {error && (
           <p className="mensaje-carrito-cargando" role="alert">
             No pudimos cargar los productos destacados. {error}

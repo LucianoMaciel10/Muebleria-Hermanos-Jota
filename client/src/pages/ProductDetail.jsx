@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
+import { SkeletonDetalle } from "../components/Skeletons";
 
 const base = import.meta.env.VITE_API_URL || "";
 
@@ -73,13 +74,7 @@ function ProductDetail({ carrito, onAgregar, onProductoModificado }) {
   };
 
   if (cargando) {
-    return (
-      <section className="product-detail">
-        <div className="container">
-          <p role="status">Cargando producto...</p>
-        </div>
-      </section>
-    );
+    return <SkeletonDetalle />;
   }
 
   if (error) {

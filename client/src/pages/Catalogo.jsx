@@ -1,5 +1,6 @@
 import ProductCard from "../components/catalogo/ProductCard";
 import HeaderCatalog from "../components/catalogo/HeaderCatalog";
+import { SkeletonCatalogo } from "../components/Skeletons";
 
 function Catalogo({
   carrito,
@@ -23,9 +24,7 @@ function Catalogo({
             setBusqueda={setBusqueda}
           />
 
-          {cargando && (
-            <p className="loading-productos">Cargando productos...</p>
-          )}
+          {cargando && <SkeletonCatalogo />}
           {error && (
             <p className="mensaje-carrito-cargando" role="alert">
               Error al cargar los productos. {error}
