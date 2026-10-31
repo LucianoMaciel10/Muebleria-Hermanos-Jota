@@ -15,7 +15,6 @@ function Catalogo({
     <>
       <section className="catalog" aria-labelledby="catalog-title">
         <div className="container">
-
           <HeaderCatalog
             categoriaSeleccionada={categoriaSeleccionada}
             setCategoria={setCategoria}
@@ -23,7 +22,9 @@ function Catalogo({
             setBusqueda={setBusqueda}
           />
 
-          {cargando && <p className="loading-productos">Cargando productos...</p>}
+          {cargando && (
+            <p className="loading-productos">Cargando productos...</p>
+          )}
           {error && (
             <p className="mensaje-carrito-cargando" role="alert">
               Error al cargar los productos. {error}

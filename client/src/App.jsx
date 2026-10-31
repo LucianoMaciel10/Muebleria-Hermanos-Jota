@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./pages/Inicio";
@@ -10,6 +10,7 @@ import ProductDetail from "./pages/ProductDetail";
 import Carrito from "./pages/Carrito";
 import { useProductos } from "./hooks/useProductos";
 import ContactForm from "./pages/ContactForm";
+import ProductForm from "./pages/ProductForm";
 
 function App() {
   const [carrito, setCarrito] = useState(
@@ -27,6 +28,7 @@ function App() {
     productos,
     cargando: cargandoProductos,
     error: errorProductos,
+    recargar: recargarProductos,
   } = useProductos(categoriaSeleccionada, busqueda);
 
   useEffect(() => {
@@ -123,6 +125,7 @@ function App() {
             element={
               <ProductDetail
                 onAgregar={agregarAlCarrito}
+                onProductoModificado={recargarProductos}
               />
             }
           />
@@ -137,9 +140,16 @@ function App() {
               />
             }
           />
-
-          {/* Acá van las rutas /admin/crear-producto y /admin/editar-producto
-            cuando estén los formularios */}
+          <Route
+            path="/admin/crear-producto"
+            element={<ProductForm key="crear" onGuardado={recargarProductos} />}
+          />
+          <Route
+            path="/admin/editar-producto/:id"
+            element={
+              <ProductForm key="editar" onGuardado={recargarProductos} />
+            }
+          />
 
           <Route path="*" element={<p>Esta página no existe</p>} />
         </Routes>

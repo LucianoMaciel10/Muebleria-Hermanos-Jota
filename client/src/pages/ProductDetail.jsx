@@ -1,12 +1,18 @@
 import { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import toast from "react-hot-toast";
 
-function ProductDetail({ onAgregar }) {
+const base = import.meta.env.VITE_API_URL || "";
+
+function ProductDetail({ onAgregar, onProductoModificado }) {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [producto, setProducto] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
   const [cantidad, setCantidad] = useState("1");
+  const [confirmandoEliminar, setConfirmandoEliminar] = useState(false);
+  const [eliminando, setEliminando] = useState(false);
 
   const cantidadValida = Math.max(1, parseInt(cantidad, 10) || 1);
 
@@ -17,7 +23,6 @@ function ProductDetail({ onAgregar }) {
       setError(null);
       setCantidad("1");
       try {
-        const base = import.meta.env.VITE_API_URL || "";
         const respuesta = await fetch(`${base}/api/productos/${id}`, {
           signal: abortController.signal,
         });
@@ -35,6 +40,32 @@ function ProductDetail({ onAgregar }) {
     cargarProducto();
     return () => abortController.abort();
   }, [id]);
+
+  const eliminarProducto = async () => {
+    setEliminando(true);
+    try {
+      const respuesta = await fetch(`${base}/api/productos/${id}`, {
+        method: "DELETE",
+      });
+      if (!respuesta.ok) {
+        const data = await respuesta.json();
+        throw new Error(data.error?.mensaje || `Error ${respuesta.status}`);
+      }
+      toast.success(`${producto.nombre} eliminado correctamente.`, {
+        position: "top-center",
+        duration: 4000,
+      });
+      onProductoModificado();
+      navigate("/productos");
+    } catch (err) {
+      toast.error(`No pudimos eliminar el producto. ${err.message}`, {
+        position: "top-center",
+        duration: 4000,
+      });
+      setEliminando(false);
+      setConfirmandoEliminar(false);
+    }
+  };
 
   if (cargando) {
     return (
@@ -90,7 +121,7 @@ function ProductDetail({ onAgregar }) {
               {producto.stock ? "En stock" : "Sin stock"}
             </p>
 
-            {producto.stock && (
+            {producto.stock > 0 && (
               <div className="product-detail__purchase">
                 <label htmlFor="product-quantity">Cantidad</label>
                 <div className="product-detail__purchase-controls">
@@ -121,7 +152,7 @@ function ProductDetail({ onAgregar }) {
                 </div>
               </div>
             )}
-            
+
             {producto.caracteristicas &&
               producto.caracteristicas.length > 0 && (
                 <section
@@ -136,9 +167,66 @@ function ProductDetail({ onAgregar }) {
                   </ul>
                 </section>
               )}
+
+            <div className="product-detail__admin">
+              <Link
+                to={`/admin/editar-producto/${producto._id}`}
+                className="btn btn--primary"
+              >
+                Editar
+              </Link>
+              <button
+                type="button"
+                className="btn btn--outline"
+                onClick={() => setConfirmandoEliminar(true)}
+              >
+                Eliminar
+              </button>
+            </div>
           </div>
         </div>
       </div>
+
+      {confirmandoEliminar && (
+        <div className="ventana-emergente-overlay">
+          <div
+            className="ventana-emergente-caja"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="ventana-emergente-titulo"
+          >
+            <h2
+              id="ventana-emergente-titulo"
+              className="ventana-emergente-titulo"
+            >
+              Eliminar producto
+            </h2>
+            <p className="ventana-emergente-mensaje">
+              ¿Estás seguro de que deseas eliminar "{producto.nombre}"? Esta
+              acción no se puede deshacer.
+            </p>
+            <div className="ventana-emergente-acciones">
+              <button
+                type="button"
+                className="btn-ventana-emergente btn-ventana-emergente--cancelar"
+                onClick={() => setConfirmandoEliminar(false)}
+                disabled={eliminando}
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                className="btn-ventana-emergente btn-ventana-emergente--aceptar"
+                onClick={eliminarProducto}
+                disabled={eliminando}
+                autoFocus
+              >
+                {eliminando ? "Eliminando..." : "Eliminar"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

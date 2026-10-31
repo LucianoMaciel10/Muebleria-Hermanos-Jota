@@ -4,6 +4,7 @@ export function useProductos(categoriaSeleccionada, busqueda) {
   const [productos, setProductos] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
+  const [version, setVersion] = useState(0);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -41,7 +42,9 @@ export function useProductos(categoriaSeleccionada, busqueda) {
       cargarProductos();
       return () => abortController.abort();
     }
-  }, [categoriaSeleccionada, busqueda]);
+  }, [categoriaSeleccionada, busqueda, version]);
 
-  return { productos, cargando, error };
+  const recargar = () => setVersion((v) => v + 1);
+
+  return { productos, cargando, error, recargar };
 }
