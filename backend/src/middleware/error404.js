@@ -30,6 +30,11 @@ mensaje = "Los datos del producto no son válidos";
     status = 400;
     mensaje = `El id "${err.value}" no es válido debe ser un id de 24 caracteres.`;
   }
+
+  if (err.code === 11000) {
+    status = 409;
+    mensaje = "Ya existe un recurso con esos datos";
+  }
  
   console.error(`Error ${status}: ${mensaje}`);
 

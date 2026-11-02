@@ -1,12 +1,27 @@
 const express = require("express");
 const router = express.Router();
 const Producto = require("../models/Producto");
+const Categoria = require("../models/Categoria");
 
 function TextoNormal(texto) {
   return texto
     .toLowerCase()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "");
+}
+
+async function validarCategoria(categoria, next) {
+  if (categoria === undefined || categoria === null || categoria === "") {
+    return true;
+  }
+  const existe = await Categoria.findById(categoria);
+  if (!existe) {
+    const error = new Error("La categoría no existe");
+    error.status = 400;
+    next(error);
+    return false;
+  }
+  return true;
 }
 
 // GET /api/productos?categoria=
@@ -18,10 +33,12 @@ router.get("/", async (req, res) => {
     filtro.categoria = categoria;
   }
 
-  let productos = await Producto.find(filtro).collation({
-    locale: "es",
-    strength: 1,
-  });
+  let productos = await Producto.find(filtro)
+    .populate("categoria", "nombre")
+    .collation({
+      locale: "es",
+      strength: 1,
+    });
 
   if (busqueda) {
     const termino = TextoNormal(busqueda);
@@ -36,7 +53,10 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/:id", async (req, res, next) => {
-  const producto = await Producto.findById(req.params.id);
+  const producto = await Producto.findById(req.params.id).populate(
+    "categoria",
+    "nombre",
+  );
 
   if (!producto) {
     const error = new Error(`Producto con id "${req.params.id}" no encontrado`);
@@ -48,11 +68,13 @@ router.get("/:id", async (req, res, next) => {
 });
 
 router.post("/", async (req, res, next) => {
+  if (!(await validarCategoria(req.body.categoria, next))) return;
   const nuevoProducto = await Producto.create(req.body);
   res.status(201).json(nuevoProducto);
 });
 
 router.put("/:id", async (req, res, next) => {
+  if (!(await validarCategoria(req.body.categoria, next))) return;
   const productoActualizado = await Producto.findByIdAndUpdate(
     req.params.id,
     req.body,

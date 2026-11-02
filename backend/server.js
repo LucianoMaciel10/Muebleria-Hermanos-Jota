@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const logger = require("./src/middleware/loggs");
 const productosRoutes = require("./src/routes/productos.routes");
+const categoriasRoutes = require("./src/routes/categorias.routes");
 const { RutaNoEncontrada, ManejadorErrores } = require("./src/middleware/error404");
 const conectarDB = require("./src/config/db");
 
@@ -13,6 +14,7 @@ app.use(cors({ origin: "https://muebleria-hermanos-jota-peach.vercel.app" }));
 app.use(logger);
 app.use(express.json());
 app.use("/api/productos", productosRoutes);
+app.use("/api/categorias", categoriasRoutes);
 
 
 
