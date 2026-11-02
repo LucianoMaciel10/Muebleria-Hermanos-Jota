@@ -107,7 +107,7 @@ function ProductDetail({ carrito, onAgregar, onProductoModificado }) {
           </div>
 
           <div className="product-detail__info">
-            <p className="eyebrow">{producto.categoria}</p>
+            <p className="eyebrow">{producto.categoria?.nombre}</p>
             <h1 className="product-detail__title" id="product-detail-title">
               {producto.nombre}
             </h1>

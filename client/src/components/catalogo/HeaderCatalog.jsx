@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useCategorias } from "../../hooks/useCategorias";
 
 function HeaderCatalog({
   categoriaSeleccionada,
@@ -6,6 +7,8 @@ function HeaderCatalog({
   busqueda,
   setBusqueda,
 }) {
+  const { categorias } = useCategorias();
+
   return (
     <header className="catalog__header">
       <h1 id="catalog-title" className="section-title">
@@ -21,10 +24,11 @@ function HeaderCatalog({
             onChange={(e) => setCategoria(e.target.value)}
           >
             <option value="">Todas las categorías</option>
-            <option value="asientos">Asientos</option>
-            <option value="mesas">Mesas</option>
-            <option value="almacenamiento">Almacenamiento</option>
-            <option value="escritorios">Escritorios</option>
+            {categorias.map((categoria) => (
+              <option key={categoria._id} value={categoria._id}>
+                {categoria.nombre}
+              </option>
+            ))}
           </select>
         </div>
         <div className="catalog__search">

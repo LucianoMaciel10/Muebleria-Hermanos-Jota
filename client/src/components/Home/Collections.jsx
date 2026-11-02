@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useCategorias } from "../../hooks/useCategorias";
 
 const COLECCIONES = [
   {
@@ -28,6 +29,12 @@ const COLECCIONES = [
 ];
 
 function Collections({ onVerCategoria }) {
+  const { categorias } = useCategorias();
+
+  // La API filtra por _id: buscamos la categoría por su nombre
+  const idDe = (nombre) =>
+    categorias.find((c) => c.nombre.toLowerCase() === nombre)?._id ?? "";
+
   return (
     <section className="collections">
       <div className="container">
@@ -38,7 +45,7 @@ function Collections({ onVerCategoria }) {
               key={coleccion.categoria}
               to="/productos"
               className="collection-card"
-              onClick={() => onVerCategoria(coleccion.categoria)}
+              onClick={() => onVerCategoria(idDe(coleccion.categoria))}
             >
               <img src={coleccion.imagen} alt={coleccion.alt} />
               <span className="collection-card__label">{coleccion.label}</span>

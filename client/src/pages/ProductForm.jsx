@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useCategorias } from "../hooks/useCategorias";
 
 const base = import.meta.env.VITE_API_URL || "";
 
@@ -65,30 +66,14 @@ function ProductForm({ onGuardado }) {
   const [campos, setCampos] = useState(CAMPOS_INICIALES);
   const [errores, setErrores] = useState({});
   const [enviado, setEnviado] = useState(false);
-  const [categorias, setCategorias] = useState([]);
+  const { categorias, error: errorCategorias } = useCategorias();
   const [cargando, setCargando] = useState(editando);
   const [error, setError] = useState(null);
   const [guardando, setGuardando] = useState(false);
 
-  // Categorías de los productos existentes
   useEffect(() => {
-    const abortController = new AbortController();
-    async function cargarCategorias() {
-      try {
-        const respuesta = await fetch(`${base}/api/productos`, {
-          signal: abortController.signal,
-        });
-        if (!respuesta.ok) throw new Error();
-        const data = await respuesta.json();
-        setCategorias([...new Set(data.map((p) => p.categoria))].sort());
-      } catch (err) {
-        if (err.name !== "AbortError")
-          toast.error("No pudimos cargar las categorías.");
-      }
-    }
-    cargarCategorias();
-    return () => abortController.abort();
-  }, []);
+    if (errorCategorias) toast.error("No pudimos cargar las categorías.");
+  }, [errorCategorias]);
 
   // En modo edición, carga el producto y autocompleta el formulario
   useEffect(() => {
@@ -108,7 +93,7 @@ function ProductForm({ onGuardado }) {
         setCampos({
           nombre: p.nombre,
           descripcion: p.descripcion,
-          categoria: p.categoria,
+          categoria: p.categoria?._id ?? "",
           precio: String(p.precio),
           stock: String(p.stock ?? ""),
           imagenUrl: p.imagenUrl || "",
@@ -253,8 +238,8 @@ function ProductForm({ onGuardado }) {
         >
           <option value="">Seleccioná una categoría</option>
           {categorias.map((categoria) => (
-            <option key={categoria} value={categoria}>
-              {categoria}
+            <option key={categoria._id} value={categoria._id}>
+              {categoria.nombre}
             </option>
           ))}
         </select>
