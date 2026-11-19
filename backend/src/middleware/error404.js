@@ -38,7 +38,7 @@ mensaje = "Los datos del producto no son válidos";
  
   console.error(`Error ${status}: ${mensaje}`);
 
-  const respuesta = { error: { mensaje } };
+  const respuesta = { error: { mensaje }, mensaje };
 
   if (detalles) {
     respuesta.error.detalles = detalles;

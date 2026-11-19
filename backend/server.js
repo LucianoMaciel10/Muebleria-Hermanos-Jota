@@ -3,6 +3,7 @@ const cors = require("cors");
 const logger = require("./src/middleware/loggs");
 const productosRoutes = require("./src/routes/productos.routes");
 const categoriasRoutes = require("./src/routes/categorias.routes");
+const usuariosRoutes = require("./src/routes/usuarios.routes");
 const { RutaNoEncontrada, ManejadorErrores } = require("./src/middleware/error404");
 const conectarDB = require("./src/config/db");
 
@@ -15,6 +16,7 @@ app.use(logger);
 app.use(express.json());
 app.use("/api/productos", productosRoutes);
 app.use("/api/categorias", categoriasRoutes);
+app.use("/api/usuarios", usuariosRoutes);
 
 
 

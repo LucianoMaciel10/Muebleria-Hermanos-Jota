@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Producto = require("../models/Producto");
 const Categoria = require("../models/Categoria");
+const { verificarToken, soloAdmin } = require("../middleware/auth");
 
 function TextoNormal(texto) {
   return texto
@@ -67,13 +68,13 @@ router.get("/:id", async (req, res, next) => {
   res.json(producto);
 });
 
-router.post("/", async (req, res, next) => {
+router.post("/", verificarToken, soloAdmin, async (req, res, next) => {
   if (!(await validarCategoria(req.body.categoria, next))) return;
   const nuevoProducto = await Producto.create(req.body);
   res.status(201).json(nuevoProducto);
 });
 
-router.put("/:id", async (req, res, next) => {
+router.put("/:id", verificarToken, soloAdmin, async (req, res, next) => {
   if (!(await validarCategoria(req.body.categoria, next))) return;
   const productoActualizado = await Producto.findByIdAndUpdate(
     req.params.id,
@@ -88,7 +89,7 @@ router.put("/:id", async (req, res, next) => {
   res.json(productoActualizado);
 });
 
-router.delete("/:id", async (req, res, next) => {
+router.delete("/:id", verificarToken, soloAdmin, async (req, res, next) => {
   const productoEliminado = await Producto.findByIdAndDelete(req.params.id);
 
   if (!productoEliminado) {
