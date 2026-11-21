@@ -12,6 +12,7 @@ import { useProductos } from "./hooks/useProductos";
 import ContactForm from "./pages/ContactForm";
 import ProductForm from "./pages/ProductForm";
 import NotFound from "./pages/NotFound";
+import Login from "./pages/Login";
 
 function App() {
   const [carrito, setCarrito] = useState(
@@ -141,6 +142,7 @@ function App() {
             }
           />
           <Route path="/contacto" element={<ContactForm />} />
+          <Route path="/login" element={<Login />} />
           <Route
             path="/carrito"
             element={
