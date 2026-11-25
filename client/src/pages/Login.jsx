@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import toast from 'react-hot-toast';
 
@@ -62,14 +62,15 @@ export default function Login() {
   }
 
   return (
-    <section className="pagina-login">
-      <h1 className="login">Ingresar</h1>
-      <form onSubmit={handleSubmit} className="formulario-login" noValidate>
+    <section className="pagina-auth">
+      <h1 className="form-title">Ingresar</h1>
+      <form onSubmit={handleSubmit} className="auth-form" noValidate>
         <label htmlFor="email">Email</label>
         <input 
           type="email" 
           id="email" 
           name="email"
+          placeholder="ejemplo@gmail.com"
           autoComplete="email"
           required
           aria-invalid={Boolean(errores.email)}
@@ -104,6 +105,9 @@ export default function Login() {
         <button type="submit" className="enviar-form">
           Ingresar
         </button>
+        <p>
+          ¿No tiene una cuenta? <Link to="/registro">Regístrese aquí</Link>
+        </p>
       </form>
     </section>
   );

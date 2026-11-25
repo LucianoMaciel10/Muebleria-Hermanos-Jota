@@ -14,8 +14,7 @@ export function AuthProvider({ children }) {
     });
     const datos = await respuesta.json();
     if (!respuesta.ok) throw new Error(datos.mensaje || 'No se pudo registrar el usuario');
-    localStorage.setItem('sesion', JSON.stringify(datos));
-    setSesion(datos);
+    await login(datos.email, password);
   }
 
   async function login(email, password) {
