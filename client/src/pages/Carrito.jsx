@@ -13,13 +13,12 @@ const formatearMoneda = (monto) =>
     maximumFractionDigits: 0,
   }).format(monto);
 
-  function Carrito({ onNavigate }) {
+function Carrito({ onNavigate }) {
   const { carrito, setCarrito } = useCart();
   const { token, logout } = useAuth();
   const navigate = useNavigate();
   const [ventana, setVentana] = useState(null);
-
-
+  const [procesando, setProcesando] = useState(false);
 
   const cambiarCantidad = (_id, cambio) => {
     setCarrito((carritoAnterior) =>
@@ -51,8 +50,10 @@ const formatearMoneda = (monto) =>
       },
     });
   };
-// enviar el pedido al back y si el token sale bien vacia el corrito
+  // enviar el pedido al back y si el token sale bien vacia el corrito
   const confirmarCompra = async () => {
+    cerrarVentana(); // saca el botón Aceptar, evita el doble clic
+    setProcesando(true);
     try {
       const base = import.meta.env.VITE_API_URL || "";
       const respuesta = await fetch(`${base}/api/pedidos`, {
@@ -62,7 +63,10 @@ const formatearMoneda = (monto) =>
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          items: carrito.map((p) => ({ producto: p._id, cantidad: p.cantidad })),
+          items: carrito.map((p) => ({
+            producto: p._id,
+            cantidad: p.cantidad,
+          })),
         }),
       });
       const data = await respuesta.json();
@@ -85,7 +89,9 @@ const formatearMoneda = (monto) =>
 
       if (!respuesta.ok) {
         throw new Error(
-          data.mensaje || data.error?.mensaje || "No se pudo finalizar la compra",
+          data.mensaje ||
+            data.error?.mensaje ||
+            "No se pudo finalizar la compra",
         );
       }
 
@@ -107,9 +113,10 @@ const formatearMoneda = (monto) =>
         mostrarCancelar: false,
         alAceptar: cerrarVentana,
       });
+    } finally {
+      setProcesando(false);
     }
   };
-
 
   // Solo usuarios logueados pueden comprar
   const pedirFinalizarCompra = () => {
@@ -124,8 +131,6 @@ const formatearMoneda = (monto) =>
       alAceptar: confirmarCompra,
     });
   };
-
- 
 
   //  el 21% se suma al subtotal
   const subtotal = carrito.reduce(
@@ -192,6 +197,7 @@ const formatearMoneda = (monto) =>
                         className="btn-cantidad"
                         onClick={() => cambiarCantidad(producto._id, -1)}
                         aria-label={`Restar uno a ${producto.nombre}`}
+                        disabled={procesando}
                       >
                         -
                       </button>
@@ -202,7 +208,7 @@ const formatearMoneda = (monto) =>
                         type="button"
                         className="btn-cantidad"
                         onClick={() => cambiarCantidad(producto._id, 1)}
-                        disabled={producto.cantidad >= producto.stock}
+                        disabled={producto.cantidad >= producto.stock || procesando}
                         aria-label={`Sumar uno a ${producto.nombre}`}
                       >
                         +
@@ -216,6 +222,7 @@ const formatearMoneda = (monto) =>
                       className="btn-eliminar"
                       onClick={() => eliminarProducto(producto._id)}
                       aria-label={`Eliminar ${producto.nombre}`}
+                      disabled={procesando}
                     >
                       &times;
                     </button>
@@ -244,6 +251,7 @@ const formatearMoneda = (monto) =>
                   type="button"
                   className="btn-comprar"
                   onClick={pedirFinalizarCompra}
+                  disabled={procesando}
                 >
                   Finalizar compra
                 </button>
@@ -251,6 +259,7 @@ const formatearMoneda = (monto) =>
                   type="button"
                   className="btn-vaciar"
                   onClick={pedirVaciarCarrito}
+                  disabled={procesando}
                 >
                   Vaciar carrito
                 </button>

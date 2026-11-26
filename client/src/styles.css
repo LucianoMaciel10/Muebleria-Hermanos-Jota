@@ -2197,3 +2197,10 @@ button {
 .catalog__empty p:last-child {
   margin-bottom: 0;
 }
+
+.btn-comprar:disabled,
+.btn-vaciar:disabled,
+.btn-eliminar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
