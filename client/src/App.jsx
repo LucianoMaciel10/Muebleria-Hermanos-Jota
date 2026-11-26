@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./pages/Inicio";
 import Catalogo from "./pages/Catalogo";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import ProductDetail from "./pages/ProductDetail";
 
 import Carrito from "./pages/Carrito";
@@ -15,10 +15,11 @@ import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Registro from "./pages/Registro";
 
+import MisPedidos from "./pages/MisPedidos";
+import { useCart } from "./context/CartContext";
+
 function App() {
-  const [carrito, setCarrito] = useState(
-    () => JSON.parse(localStorage.getItem("carrito")) || [],
-  );
+  const { carrito, agregarAlCarrito, cantidadCarrito } = useCart();
   const [categoriaSeleccionada, setCategoria] = useState("");
   const [busqueda, setBusqueda] = useState("");
   const location = useLocation();
@@ -34,65 +35,20 @@ function App() {
     recargar: recargarProductos,
   } = useProductos(categoriaSeleccionada, busqueda);
 
-  useEffect(() => {
-    localStorage.setItem("carrito", JSON.stringify(carrito));
-  }, [carrito]);
-
-  const cantidadCarrito = carrito.reduce((acc, item) => acc + item.cantidad, 0);
-
-  // Agrega el producto, suma si ya estaba en el carrito sin superar el stock
-  const agregarAlCarrito = (productoNuevo, cantidad = null) => {
-    const cantidadAgregar = cantidad || 1;
-    const enCarrito =
-      carrito.find((producto) => producto._id === productoNuevo._id)
-        ?.cantidad || 0;
-    const disponibles = productoNuevo.stock - enCarrito;
-
-    if (cantidadAgregar > disponibles) return;
-
-    const mensaje =
-      enCarrito > 0
-        ? `${productoNuevo.nombre} ya estaba en el carrito, se sumó ${cantidadAgregar > 1 ? `${cantidadAgregar} unidades` : "una unidad"}`
-        : `${productoNuevo.nombre} agregado al carrito`;
-
-    setCarrito((carritoAnterior) => {
-      const yaExiste = carritoAnterior.find(
-        (producto) => producto._id === productoNuevo._id,
-      );
-      if (yaExiste) {
-        return carritoAnterior.map((producto) =>
-          producto._id === productoNuevo._id
-            ? {
-                ...producto,
-                stock: productoNuevo.stock,
-                cantidad: producto.cantidad + cantidadAgregar,
-              }
-            : producto,
-        );
-      }
-
-      return [
-        ...carritoAnterior,
-        { ...productoNuevo, cantidad: cantidadAgregar },
-      ];
-    });
-
-    toast.success(mensaje, {
-      position: "bottom-right",
-      duration: 4000,
-    });
-  };
-
   const limpiarFiltros = () => {
     setCategoria("");
     setBusqueda("");
   };
 
-  const seleccionarCategoria = (categoria) => {
+   const seleccionarCategoria = (categoria) => {
     setBusqueda("");
     setCategoria(categoria);
   };
 
+
+ 
+
+  
   return (
     <>
       <Toaster />
@@ -145,17 +101,10 @@ function App() {
           <Route path="/contacto" element={<ContactForm />} />
           <Route path="/registro" element={<Registro />} />
           <Route path="/login" element={<Login />} />
+            <Route path="/carrito" element={<Carrito onNavigate={limpiarFiltros} />} />
+           <Route path="/mis-pedidos" element={<MisPedidos />} />
           <Route
-            path="/carrito"
-            element={
-              <Carrito
-                carrito={carrito}
-                setCarrito={setCarrito}
-                onNavigate={limpiarFiltros}
-              />
-            }
-          />
-          <Route
+           
             path="/admin/crear-producto"
             element={<ProductForm key="crear" onGuardado={recargarProductos} />}
           />
