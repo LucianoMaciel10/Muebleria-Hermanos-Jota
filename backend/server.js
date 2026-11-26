@@ -6,6 +6,7 @@ const categoriasRoutes = require("./src/routes/categorias.routes");
 const usuariosRoutes = require("./src/routes/usuarios.routes");
 const { RutaNoEncontrada, ManejadorErrores } = require("./src/middleware/error404");
 const conectarDB = require("./src/config/db");
+const pedidosRoutes = require("./src/routes/pedidos.routes");
 
 
 const app = express();
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use("/api/productos", productosRoutes);
 app.use("/api/categorias", categoriasRoutes);
 app.use("/api/usuarios", usuariosRoutes);
+app.use("/api/pedidos", pedidosRoutes);
 
 
 
