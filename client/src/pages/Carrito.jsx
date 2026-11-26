@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
 
 const TASA_IVA = 0.21;
 
@@ -11,8 +13,13 @@ const formatearMoneda = (monto) =>
     maximumFractionDigits: 0,
   }).format(monto);
 
-function Carrito({ carrito, setCarrito, onNavigate }) {
+  function Carrito({ onNavigate }) {
+  const { carrito, setCarrito } = useCart();
+  const { token, logout } = useAuth();
+  const navigate = useNavigate();
   const [ventana, setVentana] = useState(null);
+
+
 
   const cambiarCantidad = (_id, cambio) => {
     setCarrito((carritoAnterior) =>
@@ -44,26 +51,81 @@ function Carrito({ carrito, setCarrito, onNavigate }) {
       },
     });
   };
+// enviar el pedido al back y si el token sale bien vacia el corrito
+  const confirmarCompra = async () => {
+    try {
+      const base = import.meta.env.VITE_API_URL || "";
+      const respuesta = await fetch(`${base}/api/pedidos`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          items: carrito.map((p) => ({ producto: p._id, cantidad: p.cantidad })),
+        }),
+      });
+      const data = await respuesta.json();
 
-  // Pregunta antes de finalizar la compra
+      // Token vencido  se limpia la sesión, se conserva el carrito
+      if (respuesta.status === 401) {
+        setVentana({
+          titulo: "Sesión vencida",
+          mensaje:
+            "Tu sesión expiró. Iniciá sesión de nuevo para finalizar la compra.",
+          mostrarCancelar: false,
+          alAceptar: () => {
+            cerrarVentana();
+            logout();
+            navigate("/login");
+          },
+        });
+        return;
+      }
+
+      if (!respuesta.ok) {
+        throw new Error(
+          data.mensaje || data.error?.mensaje || "No se pudo finalizar la compra",
+        );
+      }
+
+      setCarrito([]);
+      setVentana({
+        titulo: "Compra realizada",
+        mensaje:
+          "¡Gracias por tu compra en Mueblería Hermanos Jota! Tu pedido quedó registrado.",
+        mostrarCancelar: false,
+        alAceptar: () => {
+          cerrarVentana();
+          navigate("/mis-pedidos");
+        },
+      });
+    } catch (err) {
+      setVentana({
+        titulo: "No se pudo completar la compra",
+        mensaje: err.message,
+        mostrarCancelar: false,
+        alAceptar: cerrarVentana,
+      });
+    }
+  };
+
+
+  // Solo usuarios logueados pueden comprar
   const pedirFinalizarCompra = () => {
+    if (!token) {
+      navigate("/login");
+      return;
+    }
     setVentana({
       titulo: "Finalizar compra",
       mensaje: "¿Estás seguro de que deseas finalizar la compra?",
       mostrarCancelar: true,
-      alAceptar: () =>
-        setVentana({
-          titulo: "Compra realizada",
-          mensaje:
-            "¡Gracias por tu compra en Mueblería Hermanos Jota! Procesando el pedido...",
-          mostrarCancelar: false,
-          alAceptar: () => {
-            setCarrito([]);
-            cerrarVentana();
-          },
-        }),
+      alAceptar: confirmarCompra,
     });
   };
+
+ 
 
   //  el 21% se suma al subtotal
   const subtotal = carrito.reduce(
