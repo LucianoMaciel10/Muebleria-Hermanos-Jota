@@ -2,7 +2,8 @@ import { createContext, useContext, useState, useEffect } from "react";
 import toast from "react-hot-toast";
 
 const CartContext = createContext();
-export const UseCart = () => useContext(CartContext);
+// eslint-disable-next-line react-refresh/only-export-components
+export const useCart = () => useContext(CartContext);
 
 export function CartProvider({ children }) {
   const [carrito, setCarrito] = useState(
