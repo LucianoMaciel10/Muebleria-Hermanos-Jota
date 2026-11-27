@@ -95,7 +95,7 @@ function ProductDetail({ carrito, onAgregar, onProductoModificado }) {
   };
 
   if (cargando) {
-    return <SkeletonDetalle />;
+    return <SkeletonDetalle mostrarAdmin={usuario?.rol === "admin"} />;
   }
 
   if (error) {
@@ -201,7 +201,7 @@ function ProductDetail({ carrito, onAgregar, onProductoModificado }) {
                   </ul>
                 </section>
               )}
-            
+
             {usuario?.rol === "admin" && (
               <div className="product-detail__admin">
                 <Link

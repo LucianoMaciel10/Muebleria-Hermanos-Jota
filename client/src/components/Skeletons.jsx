@@ -82,7 +82,7 @@ export function SkeletonDestacados({ cantidad = 4 }) {
 }
 
 // Esqueleto del detalle de producto (misma estructura que ProductDetail)
-export function SkeletonDetalle() {
+export function SkeletonDetalle({ mostrarAdmin = false }) {
   return (
     <section className="product-detail">
       <div className="container">
@@ -140,10 +140,12 @@ export function SkeletonDetalle() {
               </ul>
             </section>
 
-            <div className="product-detail__admin">
-              <span className="skeleton skeleton-accion" />
-              <span className="skeleton skeleton-accion skeleton-accion--largo" />
-            </div>
+            {mostrarAdmin && (
+              <div className="product-detail__admin">
+                <span className="skeleton skeleton-accion" />
+                <span className="skeleton skeleton-accion skeleton-accion--largo" />
+              </div>
+            )}
           </div>
         </div>
       </div>
