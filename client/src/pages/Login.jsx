@@ -106,7 +106,7 @@ export default function Login() {
           Ingresar
         </button>
         <p>
-          ¿No tiene una cuenta? <Link to="/registro">Regístrese aquí</Link>
+          ¿No tiene una cuenta? <Link to="/registro" state={location.state}>Regístrese aquí</Link>
         </p>
       </form>
     </section>

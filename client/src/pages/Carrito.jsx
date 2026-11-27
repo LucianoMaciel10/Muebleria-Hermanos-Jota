@@ -81,7 +81,7 @@ function Carrito({ onNavigate }) {
           alAceptar: () => {
             cerrarVentana();
             logout();
-            navigate("/login");
+            navigate("/login", { state: { desde: "/carrito" } });
           },
         });
         return;
@@ -121,7 +121,7 @@ function Carrito({ onNavigate }) {
   // Solo usuarios logueados pueden comprar
   const pedirFinalizarCompra = () => {
     if (!token) {
-      navigate("/login");
+      navigate("/login", { state: { desde: "/carrito" } });
       return;
     }
     setVentana({
@@ -208,7 +208,9 @@ function Carrito({ onNavigate }) {
                         type="button"
                         className="btn-cantidad"
                         onClick={() => cambiarCantidad(producto._id, 1)}
-                        disabled={producto.cantidad >= producto.stock || procesando}
+                        disabled={
+                          producto.cantidad >= producto.stock || procesando
+                        }
                         aria-label={`Sumar uno a ${producto.nombre}`}
                       >
                         +
