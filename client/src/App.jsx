@@ -14,6 +14,7 @@ import ProductForm from "./pages/ProductForm";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Registro from "./pages/Registro";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 import MisPedidos from "./pages/MisPedidos";
 import { useCart } from "./context/CartContext";
@@ -40,13 +41,13 @@ function App() {
     setBusqueda("");
   };
 
-   const seleccionarCategoria = (categoria) => {
+  const seleccionarCategoria = (categoria) => {
     setBusqueda("");
     setCategoria(categoria);
   };
 
 
- 
+
 
   
   return (
@@ -101,17 +102,22 @@ function App() {
           <Route path="/contacto" element={<ContactForm />} />
           <Route path="/registro" element={<Registro />} />
           <Route path="/login" element={<Login />} />
-            <Route path="/carrito" element={<Carrito onNavigate={limpiarFiltros} />} />
-           <Route path="/mis-pedidos" element={<MisPedidos />} />
+          <Route path="/carrito" element={<Carrito onNavigate={limpiarFiltros} />} />
+          <Route path="/mis-pedidos" element={<MisPedidos />} />
           <Route
-           
             path="/admin/crear-producto"
-            element={<ProductForm key="crear" onGuardado={recargarProductos} />}
+            element={
+              <ProtectedRoute soloAdmin={true}>
+                <ProductForm key="crear" onGuardado={recargarProductos} />
+              </ProtectedRoute>
+            }
           />
           <Route
             path="/admin/editar-producto/:id"
             element={
-              <ProductForm key="editar" onGuardado={recargarProductos} />
+              <ProtectedRoute soloAdmin={true}>
+                <ProductForm key="editar" onGuardado={recargarProductos} />
+              </ProtectedRoute>
             }
           />
 
