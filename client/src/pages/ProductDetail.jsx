@@ -49,6 +49,11 @@ function ProductDetail({ carrito, onAgregar, onProductoModificado }) {
     return () => abortController.abort();
   }, [id]);
 
+  // Al abrir un detalle (o pasar a otro producto) arranca desde arriba
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }, [id]);
+
   const eliminarProducto = async () => {
     setEliminando(true);
     try {
