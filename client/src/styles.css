@@ -2204,3 +2204,115 @@ button {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+/* 14. MIS PEDIDOS */
+.lista-pedidos {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.pedido-tarjeta {
+  background-color: var(--color-white);
+  border: 1px solid rgba(160, 82, 45, 0.12);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: box-shadow var(--transition);
+}
+.pedido-tarjeta:hover {
+  box-shadow: var(--shadow);
+}
+
+.pedido-encabezado {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.25rem 1rem;
+  padding: 1rem 1.25rem;
+  background-color: var(--color-alabastro);
+  border-bottom: 1px solid rgba(160, 82, 45, 0.12);
+}
+
+.pedido-fecha {
+  font-size: 1.05rem;
+}
+
+.pedido-numero {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-soft);
+}
+
+.pedido-items {
+  padding: 0.5rem 1.25rem;
+}
+
+.pedido-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid rgba(160, 82, 45, 0.08);
+}
+.pedido-item:last-child {
+  border-bottom: none;
+}
+
+.pedido-item__nombre {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.pedido-item__cantidad {
+  margin-left: 0.4rem;
+  font-weight: 400;
+  color: var(--color-text-soft);
+}
+
+.pedido-item__precio {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-rosa);
+  white-space: nowrap;
+}
+
+.pedido-resumen {
+  padding: 0.75rem 1.25rem 1.25rem;
+  background-color: var(--color-alabastro);
+}
+
+.pedido-fila {
+  display: flex;
+  justify-content: space-between;
+  padding-block: 0.35rem;
+  font-size: 0.9rem;
+  color: var(--color-text-soft);
+}
+
+.pedido-fila--total {
+  margin-top: 0.35rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(160, 82, 45, 0.2);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.pedidos-estado {
+  padding: 2rem 0;
+  text-align: center;
+  color: var(--color-text-soft);
+}
+.pedidos-estado--error {
+  color: #b91c1c;
+}
+
+@media (min-width: 900px) {
+  .lista-pedidos {
+    max-width: 820px;
+  }
+}

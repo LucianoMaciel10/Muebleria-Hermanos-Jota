@@ -35,7 +35,7 @@ function MisPedidos() {
           signal: abortController.signal,
         });
 
-        // Token vencido  se cierra la sesión y se manda al login
+        // Token vencido: se cierra la sesión y se manda al login
         if (respuesta.status === 401) {
           logout();
           setSesionVencida(true);
@@ -56,41 +56,77 @@ function MisPedidos() {
     return () => abortController.abort();
   }, [token, logout]);
 
-  //   sesión vencida: al login
+  // Sin sesión (o sesión vencida): al login
   if (!token || sesionVencida) return <Navigate to="/login" replace />;
 
-  if (cargando) return <p>Cargando pedidos...</p>;
-  if (error) return <p>{error}</p>;
-
-  if (pedidos.length === 0) {
-    return (
-      <section>
-        <h1>Mis pedidos</h1>
-        <p>Todavía no realizaste ningún pedido.</p>
-        <Link to="/productos">Ver el catálogo</Link>
-      </section>
-    );
-  }
-
   return (
-    <section>
-      <h1>Mis pedidos</h1>
-      {pedidos.map((pedido) => (
-        <article key={pedido._id}>
-          <h3>Pedido del {formatearFecha(pedido.createdAt)}</h3>
-          <ul>
-            {pedido.items.map((item) => (
-              <li key={item._id}>
-                {item.nombre} x{item.cantidad} —{" "}
-                {formatearMoneda(item.precio * item.cantidad)}
-              </li>
+    <section className="pagina-carrito">
+      <div className="contenedor-carrito">
+        <h1 className="titulo-carrito">Mis pedidos</h1>
+
+        {cargando && <p className="pedidos-estado">Cargando pedidos...</p>}
+
+        {error && (
+          <p className="pedidos-estado pedidos-estado--error">{error}</p>
+        )}
+
+        {!cargando && !error && pedidos.length === 0 && (
+          <div className="mensaje-carrito-vacio">
+            <h2>Todavía no realizaste ningún pedido</h2>
+            <Link to="/productos" className="btn-catalogo">
+              Ver el catálogo
+            </Link>
+          </div>
+        )}
+
+        {pedidos.length > 0 && (
+          <div className="lista-pedidos">
+            {pedidos.map((pedido) => (
+              <article key={pedido._id} className="pedido-tarjeta">
+                <header className="pedido-encabezado">
+                  <h3 className="pedido-fecha">
+                    {formatearFecha(pedido.createdAt)}
+                  </h3>
+                  <span className="pedido-numero">
+                    Pedido N° {pedido._id.slice(-6).toUpperCase()}
+                  </span>
+                </header>
+
+                <ul className="pedido-items">
+                  {pedido.items.map((item) => (
+                    <li key={item._id} className="pedido-item">
+                      <span className="pedido-item__nombre">
+                        {item.nombre}
+                        <span className="pedido-item__cantidad">
+                          x{item.cantidad}
+                        </span>
+                      </span>
+                      <span className="pedido-item__precio">
+                        {formatearMoneda(item.precio * item.cantidad)}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="pedido-resumen">
+                  <div className="pedido-fila">
+                    <span>Subtotal</span>
+                    <span>{formatearMoneda(pedido.subtotal)}</span>
+                  </div>
+                  <div className="pedido-fila">
+                    <span>IVA (21%)</span>
+                    <span>{formatearMoneda(pedido.iva)}</span>
+                  </div>
+                  <div className="pedido-fila pedido-fila--total">
+                    <span>Total</span>
+                    <span>{formatearMoneda(pedido.total)}</span>
+                  </div>
+                </div>
+              </article>
             ))}
-          </ul>
-          <p>Subtotal: {formatearMoneda(pedido.subtotal)}</p>
-          <p>IVA (21%): {formatearMoneda(pedido.iva)}</p>
-          <strong>Total: {formatearMoneda(pedido.total)}</strong>
-        </article>
-      ))}
+          </div>
+        )}
+      </div>
     </section>
   );
 }
