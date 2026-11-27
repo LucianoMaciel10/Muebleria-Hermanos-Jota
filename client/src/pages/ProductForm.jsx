@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useCategorias } from "../hooks/useCategorias";
+import { useAuth } from "../context/AuthContext.jsx";
 
 const base = import.meta.env.VITE_API_URL || "";
 
@@ -62,6 +63,7 @@ function ProductForm({ onGuardado }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const editando = Boolean(id);
+  const { token } = useAuth();
 
   const [campos, setCampos] = useState(CAMPOS_INICIALES);
   const [errores, setErrores] = useState({});
@@ -151,7 +153,10 @@ function ProductForm({ onGuardado }) {
         editando ? `${base}/api/productos/${id}` : `${base}/api/productos`,
         {
           method: editando ? "PUT" : "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
           body: JSON.stringify(producto),
         },
       );

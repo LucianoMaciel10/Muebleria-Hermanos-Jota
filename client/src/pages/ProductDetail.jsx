@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import { SkeletonDetalle } from "../components/Skeletons";
+import { useAuth } from "../context/AuthContext.jsx";
 
 const base = import.meta.env.VITE_API_URL || "";
 
 function ProductDetail({ carrito, onAgregar, onProductoModificado }) {
   const { id } = useParams();
+  const { token, usuario } = useAuth();
   const navigate = useNavigate();
   const [producto, setProducto] = useState(null);
   const [cargando, setCargando] = useState(true);
@@ -52,6 +54,9 @@ function ProductDetail({ carrito, onAgregar, onProductoModificado }) {
     try {
       const respuesta = await fetch(`${base}/api/productos/${id}`, {
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
       });
       if (!respuesta.ok) {
         const data = await respuesta.json();
@@ -180,22 +185,24 @@ function ProductDetail({ carrito, onAgregar, onProductoModificado }) {
                   </ul>
                 </section>
               )}
-
-            <div className="product-detail__admin">
-              <Link
-                to={`/admin/editar-producto/${producto._id}`}
-                className="btn btn--primary"
-              >
-                Editar
-              </Link>
-              <button
-                type="button"
-                className="btn btn--outline"
-                onClick={() => setConfirmandoEliminar(true)}
-              >
-                Eliminar
-              </button>
-            </div>
+            
+            {usuario?.rol === "admin" && (
+              <div className="product-detail__admin">
+                <Link
+                  to={`/admin/editar-producto/${producto._id}`}
+                  className="btn btn--primary"
+                >
+                  Editar
+                </Link>
+                <button
+                  type="button"
+                  className="btn btn--outline"
+                  onClick={() => setConfirmandoEliminar(true)}
+                >
+                  Eliminar
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

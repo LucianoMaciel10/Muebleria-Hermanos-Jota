@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useCategorias } from "../../hooks/useCategorias";
+import { useAuth } from "../../context/AuthContext.jsx";
 
 function HeaderCatalog({
   categoriaSeleccionada,
@@ -8,13 +9,17 @@ function HeaderCatalog({
   setBusqueda,
 }) {
   const { categorias } = useCategorias();
+  const { usuario } = useAuth();
+  const esAdmin = usuario?.rol === "admin";
 
   return (
     <header className="catalog__header">
       <h1 id="catalog-title" className="section-title">
         Productos
       </h1>
-      <div className="catalog__controls">
+      <div
+        className={`catalog__controls${esAdmin ? "" : " catalog__controls--sin-admin"}`}
+      >
         <div className="catalog__filter">
           <label htmlFor="category-filter">Categoría:</label>
           <select
@@ -66,9 +71,11 @@ function HeaderCatalog({
             onChange={(e) => setBusqueda(e.target.value)}
           />
         </div>
-        <Link to="/admin/crear-producto" className="btn btn--primary">
-          <span className="plus-icon">+</span> Crear producto
-        </Link>
+        {esAdmin && (
+          <Link to="/admin/crear-producto" className="btn btn--primary">
+            <span className="plus-icon">+</span> Crear producto
+          </Link>
+        )}
       </div>
     </header>
   );
