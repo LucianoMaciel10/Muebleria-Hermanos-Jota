@@ -63,7 +63,7 @@ function ProductForm({ onGuardado }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const editando = Boolean(id);
-  const { token } = useAuth();
+  const { token, logout } = useAuth();
 
   const [campos, setCampos] = useState(CAMPOS_INICIALES);
   const [errores, setErrores] = useState({});
@@ -153,7 +153,7 @@ function ProductForm({ onGuardado }) {
         editando ? `${base}/api/productos/${id}` : `${base}/api/productos`,
         {
           method: editando ? "PUT" : "POST",
-          headers: { 
+          headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
@@ -161,6 +161,16 @@ function ProductForm({ onGuardado }) {
         },
       );
       const data = await respuesta.json();
+
+      if (respuesta.status === 401) {
+        logout();
+        toast.error("Tu sesión expiró. Iniciá sesión de nuevo.", {
+          position: "top-center",
+          duration: 4000,
+        });
+        return;
+      }
+
       if (!respuesta.ok) {
         throw new Error(data.error?.mensaje || `Error ${respuesta.status}`);
       }

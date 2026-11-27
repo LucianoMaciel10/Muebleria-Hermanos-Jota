@@ -8,7 +8,7 @@ const base = import.meta.env.VITE_API_URL || "";
 
 function ProductDetail({ carrito, onAgregar, onProductoModificado }) {
   const { id } = useParams();
-  const { token, usuario } = useAuth();
+  const { token, usuario, logout } = useAuth();
   const navigate = useNavigate();
   const [producto, setProducto] = useState(null);
   const [cargando, setCargando] = useState(true);
@@ -56,8 +56,19 @@ function ProductDetail({ carrito, onAgregar, onProductoModificado }) {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
-        }
+        },
       });
+
+      if (respuesta.status === 401) {
+        logout();
+        toast.error("Tu sesión expiró. Iniciá sesión de nuevo.", {
+          position: "top-center",
+          duration: 4000,
+        });
+        navigate("/login", { state: { desde: `/productos/${id}` } });
+        return;
+      }
+
       if (!respuesta.ok) {
         const data = await respuesta.json();
         throw new Error(data.error?.mensaje || `Error ${respuesta.status}`);
